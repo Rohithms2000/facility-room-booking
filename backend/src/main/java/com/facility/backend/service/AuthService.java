@@ -2,6 +2,9 @@ package com.facility.backend.service;
 
 
 import com.facility.backend.dto.*;
+import com.facility.backend.dto.auth.AuthResponse;
+import com.facility.backend.dto.auth.LoginRequest;
+import com.facility.backend.dto.auth.RegisterRequest;
 import com.facility.backend.model.User;
 import com.facility.backend.repository.UserRepository;
 import com.facility.backend.security.UserDetailsImpl;
@@ -11,6 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +29,18 @@ public class AuthService {
 
     private final JwtService jwtService;
 
-    public MessageResponse registerUser(RegisterUserRequest request) {
-        User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(User.Role.USER)
-                .build();
+    public MessageResponse registerUser(RegisterRequest request) {
+        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("User with this email already exists");
+        }
+        User user = User.builder().name(request.getName()).email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(User.Role.USER).build();
         userRepository.save(user);
 
         return new MessageResponse("User registered successfully. Please log in.");
     }
 
-    public MessageResponse registerAdmin(RegisterAdminRequest request) {
+    public MessageResponse registerAdmin(RegisterRequest request) {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())

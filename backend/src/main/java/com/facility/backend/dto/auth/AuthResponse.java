@@ -1,4 +1,4 @@
-package com.facility.backend.dto;
+package com.facility.backend.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

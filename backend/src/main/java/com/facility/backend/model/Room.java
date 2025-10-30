@@ -1,7 +1,10 @@
 package com.facility.backend.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,6 +12,9 @@ import java.util.List;
 
 @Document(collection = "rooms")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Room {
 
     @Id
@@ -16,7 +22,7 @@ public class Room {
 
     private String name;
 
-    private Integer capacity;
+    private int capacity;
 
     private String location;
 
