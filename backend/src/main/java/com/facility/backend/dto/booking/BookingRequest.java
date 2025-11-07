@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 public class BookingRequest {
@@ -17,11 +19,11 @@ public class BookingRequest {
 
     @NotNull(message = "Start time is required")
     @Future(message = "Start time must be in the future")
-    private LocalDateTime startTime;
+    private Instant startTime;
 
     @NotNull(message = "End time is required")
     @Future(message = "End time must be in the future")
-    private LocalDateTime endTime;
+    private Instant endTime;
 
     @NotBlank(message = "Purpose is required")
     @Size(min = 5, max = 200, message = "Purpose must be between 5 and 200 characters")

@@ -25,4 +25,6 @@ public class RoomRequest {
     @Size(min = 2, message = "A room must have a minimum of 2 resources")
     private List<@NotBlank(message = "Resource name cannot be blank") String> resources;
 
+    private String createdBy;
+
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
@@ -16,9 +17,9 @@ public class BookingResponse {
 
     private String userId;
 
-    private LocalDateTime startTime;
+    private String startTime;
 
-    private LocalDateTime endTime;
+    private String endTime;
 
     private Booking.Status status;
 

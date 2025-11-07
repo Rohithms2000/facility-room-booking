@@ -20,4 +20,6 @@ public class RoomResponse {
     private String location;
 
     private List<String> resources;
+
+    private String createdBy;
 }

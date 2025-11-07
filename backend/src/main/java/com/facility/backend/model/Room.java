@@ -27,4 +27,6 @@ public class Room {
     private String location;
 
     private List<String> resources;
+
+    private String createdBy;
 }
