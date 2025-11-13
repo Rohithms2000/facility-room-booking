@@ -20,11 +20,13 @@ public class UserController {
 
     private final UserService userService;
 
+//    book a room
     @PostMapping("/bookings")
     public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request, Authentication auth){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createBooking(request, auth));
     }
 
+//    get all available rooms
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomResponse>> getAllRooms(){
         List<RoomResponse> rooms = userService.getAllRooms();
@@ -33,6 +35,7 @@ public class UserController {
                 :ResponseEntity.ok(rooms);
     }
 
+//    get all the bookings to check availabilitiy
     @GetMapping("/bookings")
     public ResponseEntity<List<BookingResponse>> getAllBookings(Authentication auth){
         List<BookingResponse> bookings = userService.getAllBookings(auth);

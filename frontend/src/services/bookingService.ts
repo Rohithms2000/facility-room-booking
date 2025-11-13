@@ -10,10 +10,18 @@ export interface BookingRequest {
 export interface Booking {
     id: string;
     roomId: string;
-    startTime: string | null;
-    endTime: string | null;
+    startTime: string | Date;
+    endTime: string | Date;
     status: string;
     purpose: string;
+}
+
+export interface BookingStats{
+  totalBookings: number;
+  approved: number;
+  pending: number;
+  cancelled: number;
+  rejected: number;
 }
 
 export const createBooking = async (bookingData: BookingRequest) => {
@@ -46,4 +54,19 @@ export const getBookingsForAdmin = async (): Promise<Booking[]> => {
     console.error("Error fetching bookings:", error);
     return [];
   }
+};
+
+export const updateBookingStatus = async (id: string, status: string) : Promise<Booking[]> => {
+    const response = await api.patch(`/admin/bookings/status/${id}?status=${status}`);
+    return response.data;
+};
+
+export const cancelBooking = async (id: string) : Promise<Booking[]> => {
+    const response = await api.patch(`/user/bookings/cancel/${id}`);
+    return response.data;
+};
+
+export const getBookingStats = async (): Promise<BookingStats> => {
+    const response = await api.get("/admin/bookingStats");
+    return response.data;
 };

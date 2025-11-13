@@ -36,8 +36,8 @@ export default function LoginPage() {
       const data = await login(formData);
       setToken(data.token);
       setRole(data.role);
-      if (data.role === "ADMIN") router.push("/admin/bookings");
-      else router.push("/user/rooms");
+      if (data.role === "ADMIN") router.push("/dashboard/admin/bookings");
+      else router.push("/dashboard/user/rooms");
     } catch (err: any) {
       const errorData = err.response?.data;
       if (errorData?.message) setErrors({ general: errorData.message });

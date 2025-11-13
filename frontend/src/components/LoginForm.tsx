@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface LoginFormProps {
   email: string;
   password: string;
@@ -46,6 +48,12 @@ export default function LoginForm({
       >
         Login
       </button>
+      <p className="text-center text-gray-600 mt-2 text-sm">
+        New User?{" "}
+        <Link href="/register" className="text-blue-600 hover:underline">
+          Register here
+        </Link>
+      </p>
     </form>
   );
 }

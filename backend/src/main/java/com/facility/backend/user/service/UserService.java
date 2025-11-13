@@ -3,6 +3,10 @@ package com.facility.backend.user.service;
 import com.facility.backend.dto.booking.BookingRequest;
 import com.facility.backend.dto.booking.BookingResponse;
 import com.facility.backend.dto.room.RoomResponse;
+import com.facility.backend.exception.BookingNotAllowedException;
+import com.facility.backend.exception.ResourceNotFoundException;
+import com.facility.backend.model.AvailabilityRule;
+import com.facility.backend.repository.AvailabilityRuleRepository;
 import com.facility.backend.util.BookingMapper;
 import com.facility.backend.util.RoomMapper;
 import com.facility.backend.model.Booking;
@@ -16,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,24 +31,73 @@ public class UserService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final RoomRepository roomRepository;
+    private final AvailabilityRuleRepository availabilityRuleRepository;
 
+
+    private static final ZoneId zone = ZoneId.of("Asia/Kolkata");
 //    room booking
     public BookingResponse createBooking(BookingRequest request, Authentication auth){
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         String userId = userDetails.getUser().getId();
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
 
         Room room = roomRepository.findById(request.getRoomId())
-                .orElseThrow(()-> new RuntimeException("Room not found"));
-//        overlapping check
-        List<Booking> overlapping = bookingRepository.findOverlappingBookings(
+                .orElseThrow(()-> new ResourceNotFoundException("Room not found"));
+
+        List<AvailabilityRule> rules = availabilityRuleRepository.findByRoomId(room.getId());
+
+//        conflict detection
+//        availability rule checking
+        LocalDateTime bookingStartLocal = LocalDateTime.ofInstant(request.getStartTime(), zone);
+        LocalDateTime bookingEndLocal = LocalDateTime.ofInstant(request.getEndTime(), zone);
+
+        LocalDate bookingDate = bookingStartLocal.toLocalDate();
+        DayOfWeek bookingDay = bookingStartLocal.getDayOfWeek();
+        LocalTime bookingStartTime = bookingStartLocal.toLocalTime();
+        LocalTime bookingEndTime = bookingEndLocal.toLocalTime();
+
+        for (AvailabilityRule rule : rules) {
+            switch (rule.getRuleType()) {
+
+                case HOLIDAY -> {
+                    LocalDate holidayDate = LocalDateTime.ofInstant(rule.getDate(), zone).toLocalDate();
+                    if (holidayDate.equals(bookingDate)) {
+                        throw new BookingNotAllowedException("Booking not allowed — holiday on " + holidayDate);
+                    }
+                }
+
+                case WEEKLY_CLOSED -> {
+                    if (rule.getDayOfWeek() == bookingDay) {
+                        throw new BookingNotAllowedException("Booking not allowed — weekly off on " + bookingDay);
+                    }
+                }
+
+                case TIME_BLOCK -> {
+                    LocalTime blockStart = LocalDateTime.ofInstant(rule.getStartTime(), zone).toLocalTime();
+                    LocalTime blockEnd = LocalDateTime.ofInstant(rule.getEndTime(), zone).toLocalTime();
+
+                    // Check if booking overlaps with blocked time range
+                    boolean overlaps =
+                            !bookingEndTime.isBefore(blockStart) &&
+                                    !bookingStartTime.isAfter(blockEnd);
+
+                    if (overlaps) {
+                        throw new BookingNotAllowedException("Booking not allowed — time block between "
+                                + blockStart + " and " + blockEnd);
+                    }
+                }
+            }
+        }
+
+//        previous bookings overlap check
+        List<Booking> conflictBookings = bookingRepository.findConflictBookings(
                 room.getId(),
                 request.getStartTime(),
                 request.getEndTime()
         );
-            if (!overlapping.isEmpty()) {
-                throw new RuntimeException("Slot already booked for this room");
+            if (!conflictBookings.isEmpty()) {
+                throw new BookingNotAllowedException("Slot already booked for this room");
             }
 
         Booking booking = Booking.builder()
@@ -73,13 +127,15 @@ public class UserService {
 
         List<Booking> bookings = bookingRepository.findByUserId(userId);
         return bookings
-                .stream().map(BookingMapper::toResponse)
+                .stream()
+                .filter(b -> b.getStatus() != Booking.Status.CANCELLED && b.getStatus() != Booking.Status.REJECTED)
+                .map(BookingMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
 //    list bookings for specific room
     public List<BookingResponse> getBookingsForRoom(String roomId){
-        List<Booking> bookings = bookingRepository.findByRoomId(roomId);
+        List<Booking> bookings = bookingRepository.findActiveBookingsByRoom(roomId);
         return bookings.stream()
                 .map(BookingMapper::toResponse)
                 .collect(Collectors.toList());
@@ -88,7 +144,7 @@ public class UserService {
 //    cancel booking
     public BookingResponse cancelBooking(String bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
-                        .orElseThrow(() -> new RuntimeException("Booking not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         booking.setStatus(Booking.Status.CANCELLED);
         Booking cancelledBooking = bookingRepository.save(booking);

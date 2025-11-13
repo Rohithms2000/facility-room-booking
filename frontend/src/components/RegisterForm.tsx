@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 interface RegisterFormProps {
     name: string;
     email: string;
     password: string;
-    errors: any;
+    errors: { name?: string; email?: string; password?: string; general?: string };
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSubmit: (e: React.FormEvent) => void;
 }
@@ -49,6 +51,12 @@ export default function RegisterForm({
             <button type="submit" className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-300 cursor-pointer focus:cursor-progress font-medium rounded-lg px-4 py-2 mt-2 bg-blue-600">
                 Register
             </button>
+            <p className="text-center text-gray-600 mt-2 text-sm">
+                Already have an account?{" "}
+                <Link href="/login" className="text-blue-600 hover:underline">
+                    Login
+                </Link>
+            </p>
         </form>
     );
 }

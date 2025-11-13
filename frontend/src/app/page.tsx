@@ -1,10 +1,10 @@
-import RegisterPage from "./register/page";
+import LoginPage from "./login/page";
 
 export default function Page() {
   return (
     <main className="w-full min-h-screen">
       <div>
-        <RegisterPage />
+        <LoginPage />
       </div>
     </main>
   );

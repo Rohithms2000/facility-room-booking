@@ -3,6 +3,7 @@ package com.facility.backend.admin.controller;
 import com.facility.backend.dto.booking.BookingResponse;
 import com.facility.backend.dto.room.RoomRequest;
 import com.facility.backend.dto.room.RoomResponse;
+import com.facility.backend.dto.stats.BookingStatsResponse;
 import com.facility.backend.model.Booking;
 import com.facility.backend.admin.service.AdminService;
 import jakarta.validation.Valid;
@@ -21,30 +22,35 @@ public class AdminController {
 
     private final AdminService adminService;
 
+//    create a room
     @PostMapping("/rooms")
     public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomRequest request, Authentication auth){
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createRoom(request, auth));
     }
 
+//    update a room
     @PutMapping("/rooms/{id}")
     public ResponseEntity<RoomResponse> editRoom(@Valid @RequestBody RoomRequest request, @PathVariable String id){
         return ResponseEntity.ok(adminService.editRoom(request, id));
     }
 
+//    delete a room by id
     @DeleteMapping("/rooms/{id}")
     public ResponseEntity<String> deleteRoom(@PathVariable String id){
         adminService.deleteRoom(id);
         return ResponseEntity.noContent().build();
     }
 
+//    booking status update - approve or reject
     @PatchMapping("/bookings/status/{id}")
-    public ResponseEntity<?> updateBookingStatus(
+    public ResponseEntity<BookingResponse> updateBookingStatus(
             @PathVariable("id") String bookingId,
             @RequestParam Booking.Status status
     ){
         return ResponseEntity.ok(adminService.updateBookingStatus(bookingId, status));
     }
 
+//    list the bookings for the rooms created by admin
     @GetMapping("/bookings")
     public ResponseEntity<List<BookingResponse>> getBookingsForAdmin(Authentication auth){
         List<BookingResponse> bookings = adminService.getBookingsForAdmin(auth);
@@ -53,11 +59,19 @@ public class AdminController {
                 :ResponseEntity.ok(bookings);
     }
 
+//    list the rooms created by admin
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomResponse>> getRooms(Authentication auth){
         List<RoomResponse> bookings = adminService.getRooms(auth);
         return bookings.isEmpty()
                 ? ResponseEntity.noContent().build()
                 :ResponseEntity.ok(bookings);
+    }
+
+//    get booking stats for admin
+    @GetMapping("/bookingStats")
+    public ResponseEntity<BookingStatsResponse> getBookingStatsForAdmin(Authentication auth){
+        BookingStatsResponse bookingStats = adminService.getBookingStatsForAdmin(auth);
+        return ResponseEntity.ok(bookingStats);
     }
 }

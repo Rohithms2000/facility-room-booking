@@ -15,3 +15,4 @@ export const registerAdmin = async (data: RegisterRequest) => {
   const response = await api.post("/auth/register-admin", data);
   return response.data;
 };
+

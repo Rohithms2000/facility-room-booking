@@ -5,25 +5,71 @@ import { Booking } from "@/services/bookingService";
 interface BookingCardProps {
     booking: Booking;
     roomName: string;
+    isAdmin: boolean;
+    onApprove?: () => void;
+    onReject?: () => void;
+    onCancel?: () => void;
 }
 
-export default function BookingCard({ booking, roomName }: BookingCardProps) {
+export default function BookingCard({ booking, roomName, isAdmin, onApprove, onReject, onCancel }: BookingCardProps) {
     return (
         <div
-            className="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition cursor-pointer"
+            className="bg-white p-4 space-y-4 cursor-pointer"
         >
             <div className="mt-3 text-center">
                 <h2 className="text-xl text-gray-800 font-semibold">{roomName}</h2>
-                <p className="text-blue-500 text-sm mt-1">{booking.status}</p>
-                <p className="text-gray-800 font-medium mt-1">{booking.purpose}</p>
-                <p className="text-gray-500 text-sm">{booking.startTime} to {booking.endTime}</p>
+                <p className="text-gray-800 font-medium mt-2">{booking.purpose}</p>
+                <p
+                    className={`text-sm mt-2 ${booking.status === "PENDING"
+                            ? "text-blue-500"
+                            : booking.status === "APPROVED"
+                                ? "text-green-500"
+                                : booking.status === "REJECTED"
+                                    ? "text-red-400"
+                                    : "text-gray-300"
+                        }`}
+                >
+                    {booking.status}
+                </p>
+
+                <p className="text-gray-500 text-sm">{booking.startTime} - {booking.endTime}</p>
             </div>
-            <div className="flex justify-center">
-            <button
-                className="bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 focus:ring-2 focus:ring-red-400 cursor-pointer focus:cursor-progress font-medium rounded-lg py-1 px-2 mt-2"
-            >
-                Cancel
-            </button>
+            <div className="flex justify-center gap-2 mt-4">
+                {isAdmin ? (
+                    <>
+                        <button
+                            onClick={onApprove}
+                            disabled={booking.status !== "PENDING"}
+                            className={`py-1 px-3
+        ${booking.status !== "PENDING"
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : "bg-blue-500/50 border-1 border-blue-500 hover:text-white hover:bg-blue-500"
+                                }`}>
+                            Approve
+                        </button>
+                        <button
+                            onClick={onReject}
+                            disabled={booking.status !== "PENDING"}
+                            className={`py-1 px-3
+        ${booking.status !== "PENDING"
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : "bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
+                                }`}>
+                            Reject
+                        </button>
+                    </>
+                ) : (
+                    <button
+                        onClick={onCancel}
+                        disabled={!(booking.status === "APPROVED" || booking.status === "PENDING")}
+                        className={`py-1 px-3
+      ${!(booking.status === "APPROVED" || booking.status === "PENDING")
+                                ? "bg-gray-400 cursor-not-allowed"
+                                : "bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
+                            }`}>
+                        Cancel
+                    </button>
+                )}
             </div>
         </div>
     );

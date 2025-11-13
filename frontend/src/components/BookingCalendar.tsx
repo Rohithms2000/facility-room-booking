@@ -4,15 +4,15 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
-import interactionPlugin, {DateClickArg} from "@fullcalendar/interaction";
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { EventClickArg } from "@fullcalendar/core";
 
 interface CalendarProps {
   events: {
     id: string;
     title: string;
-    start: string;
-    end: string;
+    start: string | Date;
+    end: string | Date;
     backgroundColor?: string;
   }[];
   onDateClick?: (arg: DateClickArg) => void;
@@ -22,7 +22,7 @@ interface CalendarProps {
 
 export default function Calendar({ events, onDateClick, onEventClick }: CalendarProps) {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
+    <div className=" w-full p-6 bg-white rounded-lg shadow-md">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
         initialView="dayGridMonth"
@@ -33,9 +33,14 @@ export default function Calendar({ events, onDateClick, onEventClick }: Calendar
         dateClick={onDateClick}
         eventClick={onEventClick}
         headerToolbar={{
-          left: "prev,next today",
+          left: "prev,next",
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
+        }}
+        views={{
+          dayGridMonth: {
+            titleFormat: { year: "2-digit", month: "short" },
+          },
         }}
       />
     </div>

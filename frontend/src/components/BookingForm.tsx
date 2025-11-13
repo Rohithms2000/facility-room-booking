@@ -8,8 +8,8 @@ interface BookingFormProps {
     startTime: Date | null;
     endTime: Date | null;
     purpose: string;
-    errors: any;
-    onChange: (field: string, value: any) => void;
+    errors?: { startTime?: string; endTime?: string; purpose?: string; general?: string | null };
+    onChange: (field: string, value: string | Date | null) => void;
     onSubmit: (e: React.FormEvent) => void;
 }
 
@@ -34,31 +34,33 @@ export default function BookingForm({
 
             <label className="block">
                 <span className="font-semibold mr-4">Start Time</span>
-                <DatePicker
-                    selected={startTime}
-                    onChange={(date) => onChange("startTime", date)}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={30}
-                    dateFormat="yyyy-MM-dd HH:mm"
-                    placeholderText="Select start time"
-                    className="border p-2 rounded w-full"
-                />
             </label>
+            <DatePicker
+                selected={startTime}
+                onChange={(date) => onChange("startTime", date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={30}
+                dateFormat="yyyy-MM-dd HH:mm"
+                placeholderText="Select start time"
+                className="border p-2 rounded w-100"
+            />
+            <p className="text-red-500 text-sm">{errors?.startTime}</p>
             <label className="block">
                 <span className="font-semibold mr-4">End Time</span>
-                <DatePicker
-                    selected={endTime}
-                    onChange={(date) => onChange("endTime", date)}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={30}
-                    dateFormat="yyyy-MM-dd HH:mm"
-                    placeholderText="Select end time"
-                    className="border p-2 rounded w-full"
-                    minDate={startTime || undefined}
-                />
             </label>
+            <DatePicker
+                selected={endTime}
+                onChange={(date) => onChange("endTime", date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={30}
+                dateFormat="yyyy-MM-dd HH:mm"
+                placeholderText="Select end time"
+                className="border p-2 rounded w-100"
+                minDate={startTime || undefined}
+            />
+            <p className="text-red-500 text-sm">{errors?.endTime}</p>
 
             <input
                 type="text"
@@ -68,9 +70,8 @@ export default function BookingForm({
                 placeholder="Purpose"
                 className="border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:border-gray-500"
             />
-            {errors.general && (
-                <p className="text-red-500 text-sm">{errors.general}</p>
-            )}
+            <p className="text-red-500 text-sm">{errors?.purpose}</p>
+            <p className="text-red-500 text-sm">{errors?.general}</p>
 
             <div className="flex justify-end">
                 <button

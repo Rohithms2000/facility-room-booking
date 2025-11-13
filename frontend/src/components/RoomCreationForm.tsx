@@ -1,13 +1,15 @@
+import Select from "react-select";
+
 interface RoomFormProps {
     name: string;
     capacity: number | null;
     location: string;
     resources: string[];
-    errors: { name?: string; capacity?: string; location?: string; resources?: string; general?: string };
-    isOpen: boolean;
-    onClose: () => void;
-    onInputChange: (field: string, value: any) => void;
-    onSubmit: (e: React.FormEvent) => void;
+    errors: { name?: string; capacity?: string; location?: string; resources?: string; general?: string | null };
+    onInputChange: (field: string, value: string | number | string[]) => void; onSubmit: (e: React.FormEvent) => void;
+    title: string;
+    submitText: string;
+    onDelete?: () => void | Promise<void>;
 }
 
 export default function RoomCreationForm({
@@ -16,73 +18,85 @@ export default function RoomCreationForm({
     location,
     resources,
     errors,
-    onClose,
-    isOpen,
     onInputChange,
     onSubmit,
+    submitText,
+    onDelete
 }: RoomFormProps) {
+    const resourceOptions = [
+        { value: "WiFi", label: "WiFi" },
+        { value: "AC", label: "AC" },
+        { value: "Projector", label: "Projector" },
+        { value: "Whiteboard", label: "Whiteboard" },
+        { value: "TV", label: "TV" },
+    ];
 
-    if (!isOpen) return null;
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-xs z-50">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 relative">
-                <button
-                    onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-900"
-                >
-                    ✕
-                </button>
+        <div className="flex items-center justify-center">
+            <div className="bg-white w-full p-8">
                 <form
                     onSubmit={onSubmit}
-                    className="space-y-4"
+                    className="space-y-2"
                     autoComplete="off"
                 >
-                    <h2 className="text-2xl mb-4 font-bold text-center">Create room</h2>
-
+                    <label className="block">Name</label>
                     <input
                         type="text"
-                        placeholder="Name"
-                        className="input border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:border-gray-500"
+                        className="input border border-gray-300 rounded p-2 w-full focus:outline-none focus:border-gray-500"
                         value={name}
                         onChange={(e) => onInputChange("name", e.target.value)}
                     />
                     <p className="text-red-500 text-sm">{errors.name}</p>
 
+                    <label className="block">Capacity</label>
                     <input
-                        type="text"
-                        placeholder="Capacity"
-                        className="input border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:border-gray-500"
-                        value={Number(capacity)}
+                        type="number"
+                        className="input border border-gray-300 rounded p-2 w-full focus:outline-none focus:border-gray-500"
+                        value={capacity ?? ""}
                         onChange={(e) => onInputChange("capacity", e.target.value)}
                     />
                     <p className="text-red-500 text-sm">{errors.capacity}</p>
 
+                    <label className="block">Location</label>
                     <input
                         type="text"
-                        placeholder="Location"
                         className="input border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:border-gray-500"
                         value={location}
                         onChange={(e) => onInputChange("location", e.target.value)}
                     />
                     <p className="text-red-500 text-sm">{errors.location}</p>
 
-                    <input
-                        type="text"
-                        placeholder="Resources"
-                        className="input border border-gray-300 rounded p-2 w-full mb-2 focus:outline-none focus:border-gray-500"
-                        value={resources.join(", ")}
-                        onChange={(e) => onInputChange("resources", e.target.value.split(",").map(r => r.trim()))}
-
+                    <label className="block font-semibold">Resources</label>
+                    <Select
+                        isMulti
+                        options={resourceOptions}
+                        value={resourceOptions.filter((opt) => resources.includes(opt.value))}
+                        onChange={(selectedOptions) =>
+                            onInputChange(
+                                "resources",
+                                selectedOptions.map((opt) => opt.value)
+                            )
+                        }
                     />
                     <p className="text-red-500 text-sm">{errors.resources}</p>
                     <p className="text-red-500 text-sm">{errors.general}</p>
-
-                    <button
-                        type="submit"
-                        className="bg-gray-700 text-white w-full hover:bg-gray-700 focus:bg-gray-700 focus:ring-3 focus:ring-gray-400 cursor-pointer font-medium rounded-lg px-4 py-2 mt-2"
-                    >
-                        Create
-                    </button>
+                    <div className="flex justify-end space-x-3 mt-6">
+                        {onDelete && (
+                            <button
+                                type="button"
+                                onClick={onDelete}
+                                className="border-1 border-red-500 bg-red-500/40 px-4 py-2 hover:shadow-lg hover:text-white hover:bg-red-500 cursor-pointer transition duration-200"
+                            >
+                                Delete
+                            </button>
+                        )}
+                        <button
+                            type="submit"
+                            className="border-1 border-green-500 bg-green-500/40 px-4 py-2 hover:shadow-lg hover:text-white hover:bg-green-500 cursor-pointer transition duration-200"
+                        >
+                            {submitText}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

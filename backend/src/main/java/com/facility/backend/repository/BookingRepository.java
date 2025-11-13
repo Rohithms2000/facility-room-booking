@@ -12,11 +12,14 @@ import java.util.List;
 public interface BookingRepository extends MongoRepository<Booking, String> {
 
 //    conflict detection logic(overlapping check)
-    @Query("{ 'roomId': ?0, 'startTime': { $lt: ?2 }, 'endTime': { $gt: ?1 }, 'status': { $ne: 'CANCELLED' } }")
-    List<Booking> findOverlappingBookings(String roomId, Instant startTime, Instant endTime);
+    @Query("{ 'roomId': ?0, 'startTime': { $lt: ?2 }, 'endTime': { $gt: ?1 }, 'status': { $nin: ['CANCELLED', 'REJECTED'] } }")
+    List<Booking> findConflictBookings(String roomId, Instant startTime, Instant endTime);
 
     List<Booking> findByUserId(String userId);
-    List<Booking> findByRoomId(String roomId);
+
+    @Query("{ 'roomId': ?0, 'status': { $nin: ['CANCELLED', 'REJECTED'] } }")
+    List<Booking> findActiveBookingsByRoom(String roomId);
+
     List<Booking> findByRoomIdIn(List<String> roomIds);
 
 

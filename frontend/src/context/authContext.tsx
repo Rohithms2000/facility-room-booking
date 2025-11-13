@@ -1,11 +1,13 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation"
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
   token: string | null;
   setToken: (token: string | null) => void;
   role: string | null;
   setRole: (role: string | null) => void;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -13,13 +15,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const router = useRouter();
 
+  // ✅ Read from localStorage only after mount
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedRole = localStorage.getItem("role");
     if (storedToken) setToken(storedToken);
     if (storedRole) setRole(storedRole);
   }, []);
+
 
   const updateToken = (newToken: string | null) => {
     setToken(newToken);
@@ -33,8 +38,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     else localStorage.removeItem("role");
   };
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    setToken(null);
+    setRole(null);
+    router.push("/login")
+  };
   return (
-    <AuthContext.Provider value={{ token, setToken: updateToken, role, setRole: updateRole }}>
+    <AuthContext.Provider value={{ token, setToken: updateToken, role, setRole: updateRole, logout }}>
       {children}
     </AuthContext.Provider>
   );

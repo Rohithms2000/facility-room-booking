@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 
 @Document(collection = "availabilityRules")
 @Data
@@ -26,19 +24,16 @@ public class AvailabilityRule {
 
     private String createdBy;
 
-    private LocalDate date;
+    private Instant date;
     private DayOfWeek dayOfWeek;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private Instant startTime;
+    private Instant endTime;
 
-    private LocalDate startDate;
-    private LocalDate endDate;
     private String reason;
 
     public enum RuleType {
         HOLIDAY,
         WEEKLY_CLOSED,
-        TIME_BLOCK,
-        DATE_RANGE
+        TIME_BLOCK
     }
 }

@@ -4,14 +4,14 @@ export interface Room {
   id: string;
   name: string;
   location: string;
-  capacity: number;
+  capacity: number | null;
   resources: string[];
   imageUrl?:string;
 }
 export interface RoomRequest {
   name: string;
   location: string;
-  capacity: number;
+  capacity: number | null;
   resources: string[];
 }
 
@@ -28,4 +28,13 @@ export const getAdminRooms = async (): Promise<Room[]> => {
 export const createRoom = async (roomRequest: RoomRequest) => {
   const response = await api.post("/admin/rooms", roomRequest);
   return response.data;
+};
+
+export const editRoom = async (id: string, roomData: Partial<Room>) => {
+  const response = await api.put(`/admin/rooms/${id}`, roomData);
+  return response.data;
+};
+
+export const deleteRoom = async (id: string): Promise<void> => {
+  await api.delete(`/admin/rooms/${id}`);
 };
