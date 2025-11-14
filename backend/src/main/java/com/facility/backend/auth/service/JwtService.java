@@ -12,12 +12,14 @@ import java.util.Date;
 
 @Service
 public class JwtService {
+//    key for signing token
     private static final String SECRET_KEY = "supersecretkeysupersecretkeysupersecretkey";
 
     private Key getSignKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
+//    generates token
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
@@ -28,10 +30,13 @@ public class JwtService {
                 .compact();
     }
 
+//    extracts username from token
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
+//    Returns true if the token belongs to the same user (username matches)
+//    and token is not expired
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -41,6 +46,7 @@ public class JwtService {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
+//    parses the token, returns all claims
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())

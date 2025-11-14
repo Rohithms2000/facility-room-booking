@@ -8,6 +8,7 @@ type AuthContextType = {
   role: string | null;
   setRole: (role: string | null) => void;
   logout: () => void;
+  loading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,14 +16,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ Read from localStorage only after mount
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedRole = localStorage.getItem("role");
+    
     if (storedToken) setToken(storedToken);
     if (storedRole) setRole(storedRole);
+
+    setLoading(false);
   }, []);
 
 
@@ -46,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     router.push("/login")
   };
   return (
-    <AuthContext.Provider value={{ token, setToken: updateToken, role, setRole: updateRole, logout }}>
+    <AuthContext.Provider value={{ token, setToken: updateToken, role, setRole: updateRole, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

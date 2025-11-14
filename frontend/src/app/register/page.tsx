@@ -1,42 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { registerUser, registerAdmin } from "@/services/authService";
 import RegisterForm from "@/components/RegisterForm";
-import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    const newErrors: typeof errors = {};
-    if (!form.email) newErrors.email = "Email is required";
-    if (!form.password) newErrors.password = "Password is required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+  const handleSubmitForm = async (data: { name: string; email: string; password: string }) => {
     try {
-      const data = isAdmin
-        ? await registerAdmin(form)
-        : await registerUser(form);
+      const response = isAdmin
+        ? await registerAdmin(data)
+        : await registerUser(data);
 
-      if (data) router.push("/login");
+      if (response) {
+        router.push("/login");
+      }
     } catch (err: any) {
       const errorData = err.response?.data;
-      if (errorData?.message) setErrors({ general: errorData.message });
-      else if (errorData && typeof errorData === "object") setErrors(errorData);
-      else setErrors({ general: "Something went wrong!" });
+      let message = "Something went wrong!";
+      if (errorData?.message) message = errorData.message;
+      toast.error(message);
     }
   };
 
@@ -47,14 +34,7 @@ export default function RegisterPage() {
           {isAdmin ? "Admin Registration" : "User Registration"}
         </h1>
 
-        <RegisterForm
-          name={form.name}
-          email={form.email}
-          password={form.password}
-          errors={errors}
-          onChange={handleChange}
-          onSubmit={handleSubmit}
-        />
+        <RegisterForm onSubmitForm={handleSubmitForm} />
 
         <p className="text-sm text-center mt-4">
           {isAdmin ? (
@@ -74,7 +54,7 @@ export default function RegisterPage() {
                 onClick={() => setIsAdmin(true)}
                 className="text-blue-600 hover:underline"
               >
-                Register as admin
+                Register as Admin
               </button>
             </>
           )}

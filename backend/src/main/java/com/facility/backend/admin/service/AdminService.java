@@ -114,6 +114,7 @@ public class AdminService {
 
         List<Booking> bookings = bookingRepository.findByRoomIdIn(roomIds);
 
+//        take count of bookings by status
         Map<String, Long> statusCount = bookings.stream()
                 .collect(Collectors.groupingBy(
                         booking -> booking.getStatus().name(),

@@ -8,7 +8,6 @@ import {
   CalendarDays,
   LogOut,
   CalendarCheck2,
-  ClipboardList,
   Menu,
   X
 } from "lucide-react";
@@ -41,7 +40,7 @@ export default function Sidebar({isOpen, setIsOpen}: SidebarProps) {
   const navItems = isAdmin
     ? [
       { name: "Analytics", href: "/dashboard/admin/analytics", icon: <ChartLine className="w-5 h-5 mr-2" /> },
-      { name: "Manage Rooms", href: "/dashboard/admin/rooms", icon: <ClipboardList className="w-5 h-5 mr-2" /> },
+      { name: "Manage Rooms", href: "/dashboard/admin/rooms", icon: <Home className="w-5 h-5 mr-2" /> },
       { name: "Bookings", href: "/dashboard/admin/bookings", icon: <CalendarDays className="w-5 h-5 mr-2" /> },
     ]
     : [

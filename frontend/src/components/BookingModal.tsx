@@ -1,10 +1,11 @@
 "use client";
 
-import BookingForm from "./BookingForm";
+import BookingForm, { BookingFormData } from "./BookingForm";
 import Calendar from "./BookingCalendar";
 import { Room } from "@/services/roomService";
 import { DateClickArg } from "@fullcalendar/interaction";
 import { EventClickArg } from "@fullcalendar/core";
+import { Control, FieldErrors, UseFormHandleSubmit, UseFormReset } from "react-hook-form";
 
 import {
   Dialog,
@@ -17,14 +18,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   room?: Room | null;
-  form?: {
-    startTime: Date | null;
-    endTime: Date | null;
-    purpose: string;
-  };
-  errors?: {startTime?: string; endTime?: string; purpose?: string; general?: string | null };
-  onChange: (field: string, value: string | Date | null) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmitBooking: (data: BookingFormData) => void;
   events: {
     id: string;
     title: string;
@@ -38,52 +32,59 @@ interface ModalProps {
   onCalendarClick?: () => void;
   activeTab: "book" | "calendar";
   setActiveTab: React.Dispatch<React.SetStateAction<"book" | "calendar">>;
+  control: Control<BookingFormData>;
+  errors: FieldErrors<BookingFormData>;
+  handleSubmit: UseFormHandleSubmit<BookingFormData>;
+  reset: UseFormReset<BookingFormData>;
 }
 
 export default function BookingModal({
   isOpen,
   onClose,
   room,
-  form,
-  errors,
-  onChange,
-  onSubmit,
+  onSubmitBooking,
   events,
   onDateClick,
   onEventClick,
   onCalendarClick,
   activeTab,
   setActiveTab,
+  control,
+  errors,
+  handleSubmit,
 }: ModalProps) {
+
   if (!room) return null;
+
+  const handleDateClickInternal = (arg: DateClickArg) => {
+    if (onDateClick) onDateClick(arg);
+    setActiveTab("book");
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="!max-w-2xl p-0">
         <DialogHeader>
-          <DialogTitle>
-          </DialogTitle>
+          <DialogTitle></DialogTitle>
         </DialogHeader>
 
         {/* Tabs */}
         <div className="flex border-b border-gray-200 mt-2">
           <button
             onClick={() => setActiveTab("book")}
-            className={`flex-1 py-2 text-center font-medium ${
-              activeTab === "book"
-                ? "border-b-2 border-green-600 text-green-600"
-                : "text-gray-500 hover:text-green-600"
-            }`}
+            className={`flex-1 py-2 text-center font-medium ${activeTab === "book"
+              ? "border-b-2 border-green-600 text-green-600"
+              : "text-gray-500 hover:text-green-600"
+              }`}
           >
             Book Room
           </button>
           <button
             onClick={() => setActiveTab("calendar")}
-            className={`flex-1 py-2 text-center font-medium ${
-              activeTab === "calendar"
-                ? "border-b-2 border-green-600 text-green-600"
-                : "text-gray-500 hover:text-green-600"
-            }`}
+            className={`flex-1 py-2 text-center font-medium ${activeTab === "calendar"
+              ? "border-b-2 border-green-600 text-green-600"
+              : "text-gray-500 hover:text-green-600"
+              }`}
           >
             Calendar
           </button>
@@ -93,19 +94,19 @@ export default function BookingModal({
           {activeTab === "book" && (
             <BookingForm
               room={room}
-              startTime={form?.startTime || null}
-              endTime={form?.endTime || null}
-              purpose={form?.purpose || ""}
+              control={control}
               errors={errors}
-              onChange={onChange}
-              onSubmit={onSubmit}
+              handleSubmit={handleSubmit}
+              onSubmitBooking={(data) => {
+                onSubmitBooking(data);
+              }}
             />
           )}
 
           {activeTab === "calendar" && (
             <Calendar
               events={events}
-              onDateClick={onDateClick}
+              onDateClick={handleDateClickInternal}
               onEventClick={onEventClick}
               onCalendarClick={onCalendarClick}
             />

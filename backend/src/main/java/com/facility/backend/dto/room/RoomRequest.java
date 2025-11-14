@@ -15,7 +15,7 @@ public class RoomRequest {
     private String name;
 
     @NotNull(message = "Capacity must be specified")
-    @Min(value = 10, message = "Capacity must be at least 10")
+    @Min(value = 20, message = "Capacity must be at least 20")
     private int capacity;
 
     @NotBlank(message = "Location is required")

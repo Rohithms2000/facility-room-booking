@@ -35,7 +35,7 @@ public class UserController {
                 :ResponseEntity.ok(rooms);
     }
 
-//    get all the bookings to check availabilitiy
+//    get all the bookings to check availability
     @GetMapping("/bookings")
     public ResponseEntity<List<BookingResponse>> getAllBookings(Authentication auth){
         List<BookingResponse> bookings = userService.getAllBookings(auth);
@@ -44,6 +44,7 @@ public class UserController {
                 :ResponseEntity.ok(bookings);
     }
 
+//    get booking for the particular room
     @GetMapping("/rooms/{roomId}/bookings")
     public ResponseEntity<List<BookingResponse>> getBookingsForRoom(@PathVariable String roomId) {
         List<BookingResponse> bookings = userService.getBookingsForRoom(roomId);
@@ -52,6 +53,7 @@ public class UserController {
                 :ResponseEntity.ok(bookings);
     }
 
+//    cancel booking
     @PatchMapping("/bookings/cancel/{id}")
     public ResponseEntity<?> updateBookingStatus(
             @PathVariable("id") String bookingId

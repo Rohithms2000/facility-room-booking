@@ -6,6 +6,7 @@ import { getAllBookings, cancelBooking, Booking } from "@/services/bookingServic
 import { getAllRooms, Room } from "@/services/roomService";
 import StatusModal from "@/components/StatusModal";
 import { EventClickArg } from "@fullcalendar/core";
+import { toast } from "react-toastify";
 
 interface CalendarEvent {
   id: string;
@@ -88,7 +89,7 @@ export default function BookingsCalendarPage() {
     try {
       const cancelled = await cancelBooking(id);
       console.log("Status updated:", cancelled);
-      alert("Booking cancelled");
+      toast.warning("Booking cancelled");
       setIsModalOpen(false);
       fetchData();
     } catch (error) {

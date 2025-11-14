@@ -6,6 +6,7 @@ import { Booking, getBookingsForAdmin, updateBookingStatus } from "@/services/bo
 import StatusModal from "@/components/StatusModal";
 import { getAllRooms, Room } from "@/services/roomService";
 import { EventClickArg } from "@fullcalendar/core";
+import { toast } from "react-toastify";
 
 interface CalendarEvent {
     id: string;
@@ -86,7 +87,7 @@ export default function BookingsCalendarPage() {
         try {
             const updated = await updateBookingStatus(id, status);
             console.log("Status updated:", updated);
-            alert("Booking status updated successfully");
+            toast.success("Booking status updated successfully");
             setEvents((prevEvents) =>
                 prevEvents.map((event) =>
                     event.id === id ? { ...event, status } : event

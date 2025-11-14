@@ -17,6 +17,7 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
 
     List<Booking> findByUserId(String userId);
 
+//    fetches only active bookings(CANCELLED/REJECTED ignored)
     @Query("{ 'roomId': ?0, 'status': { $nin: ['CANCELLED', 'REJECTED'] } }")
     List<Booking> findActiveBookingsByRoom(String roomId);
 
