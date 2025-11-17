@@ -21,12 +21,12 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                 <p className="text-gray-800 font-medium mt-2">{booking.purpose}</p>
                 <p
                     className={`text-sm mt-2 ${booking.status === "PENDING"
-                            ? "text-blue-500"
-                            : booking.status === "APPROVED"
-                                ? "text-green-500"
-                                : booking.status === "REJECTED"
-                                    ? "text-red-400"
-                                    : "text-gray-300"
+                        ? "text-blue-500"
+                        : booking.status === "APPROVED"
+                            ? "text-green-500"
+                            : booking.status === "REJECTED"
+                                ? "text-red-400"
+                                : "text-gray-300"
                         }`}
                 >
                     {booking.status}
@@ -35,30 +35,24 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                 <p className="text-gray-500 text-sm">{String(booking.startTime)} - {String(booking.endTime)}</p>
             </div>
             <div className="flex justify-center gap-2 mt-4">
-                {isAdmin ? (
+                {isAdmin && booking.status === "PENDING" && (
                     <>
                         <button
                             onClick={onApprove}
-                            disabled={booking.status !== "PENDING"}
-                            className={`py-1 px-3
-        ${booking.status !== "PENDING"
-                                    ? "bg-gray-400 cursor-not-allowed"
-                                    : "bg-blue-500/50 border-1 border-blue-500 hover:text-white hover:bg-blue-500"
-                                }`}>
+                            className="py-1 px-3 bg-blue-500/50 border-1 border-blue-500 hover:text-white hover:bg-blue-500"
+                        >
                             Approve
                         </button>
+
                         <button
                             onClick={onReject}
-                            disabled={booking.status !== "PENDING"}
-                            className={`py-1 px-3
-        ${booking.status !== "PENDING"
-                                    ? "bg-gray-400 cursor-not-allowed"
-                                    : "bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
-                                }`}>
+                            className="py-1 px-3 bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
+                        >
                             Reject
                         </button>
                     </>
-                ) : (
+                )}
+                {!isAdmin && (
                     <button
                         onClick={onCancel}
                         disabled={!(booking.status === "APPROVED" || booking.status === "PENDING")}
