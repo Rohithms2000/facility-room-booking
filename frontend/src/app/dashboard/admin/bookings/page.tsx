@@ -64,7 +64,7 @@ export default function BookingsCalendarPage() {
             console.error("Error fetching bookings:", err);
         }
     };
-    
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -127,6 +127,8 @@ export default function BookingsCalendarPage() {
                 isAdmin={true}
                 onApprove={() => handleStatus(selectedBooking.id, "APPROVED")}
                 onReject={() => handleStatus(selectedBooking.id, "REJECTED")}
+                onCancel={() => handleStatus(selectedBooking.id, "CANCELLED")}
+
             />
             )}
         </div >

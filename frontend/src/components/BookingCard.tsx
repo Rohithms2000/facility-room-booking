@@ -52,6 +52,14 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                         </button>
                     </>
                 )}
+                {isAdmin && booking.status !== "PENDING" &&(
+                    <button
+                            onClick={onCancel}
+                            className="py-1 px-3 bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
+                        >
+                            Cancel
+                        </button>
+                )}
                 {!isAdmin && (
                     <button
                         onClick={onCancel}
