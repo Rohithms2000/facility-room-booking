@@ -77,9 +77,8 @@ export default function BookingForm({
             timeIntervals={30}
             dateFormat="yyyy-MM-dd HH:mm"
             placeholderText="Select end time"
-            className={`input border rounded p-2 w-full mb-2 focus:outline-none ${
-          errors.endTime ? "border-red-500" : "border-gray-300"
-        }`}
+            className={`input border rounded p-2 w-full mb-2 focus:outline-none ${errors.endTime ? "border-red-500" : "border-gray-300"
+              }`}
           />
         )}
       />
@@ -90,9 +89,8 @@ export default function BookingForm({
         type="text"
         placeholder="Purpose"
         {...control.register("purpose", { required: "Purpose is required" })}
-        className={`input border rounded p-2 w-full mb-2 focus:outline-none ${
-          errors.purpose ? "border-red-500" : "border-gray-300"
-        }`}
+        className={`input border rounded p-2 w-full mb-2 focus:outline-none ${errors.purpose ? "border-red-500" : "border-gray-300"
+          }`}
       />
       {errors.purpose && <p className="text-red-500 text-sm">{errors.purpose.message}</p>}
 

@@ -32,7 +32,7 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                     {booking.status}
                 </p>
 
-                <p className="text-gray-500 text-sm">{booking.startTime} - {booking.endTime}</p>
+                <p className="text-gray-500 text-sm">{String(booking.startTime)} - {String(booking.endTime)}</p>
             </div>
             <div className="flex justify-center gap-2 mt-4">
                 {isAdmin ? (
