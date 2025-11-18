@@ -4,64 +4,69 @@ A full-stack web application for managing facility room bookings with role-based
 
 This project is built using:
 
-- **Next.js 14 (App Router)** — Frontend  
-- **Spring Boot (JWT Authentication)** — Backend  
-- **MongoDB** — Database  
+- **Next.js 14 (App Router)** — Frontend
+- **Spring Boot (JWT Authentication)** — Backend
+- **MongoDB** — Database
 
 ---
 
 ## Features
 
-###  Authentication & Authorization
-- JWT-based login and registration  
+### Authentication & Authorization
+
+- JWT-based login and registration
 - Role-based dashboards:
-  - **Admin** → Manage rooms, bookings, rules  
-  - **User** → View rooms, make bookings  
+  - **Admin** → Manage rooms, bookings, rules
+  - **User** → View rooms, make bookings
 
 ---
 
 ### Room Booking System
-- Calendar view for each room  
-- Book time slots without conflicts   
-- View booked slots and blocked rules visually  
+
+- Calendar view for each room
+- Book time slots without conflicts
+- View booked slots and blocked rules visually
 
 ---
 
 ### Admin Features
-- CRUD for Rooms  
+
+- CRUD for Rooms
 - CRUD for Availability Rules:
   - **Holiday** (full-day closed)
   - **Weekly Closed** (e.g., Sundays)
   - **Time Blocks** (specific unavailable time ranges)
-- View & approve/reject user bookings 
+- View & approve/reject user bookings
 
 ---
 
 ### Frontend (Next js)
+
 - App router and typescript
-- Client-side auth with React Context 
+- Client-side auth with React Context
 - Axios for api calls
 - FullCalendar for scheduling
 - React hook form for form handling
 - Tailwind CSS styling
 - Resact-Toastify for notifications
 
-
 ### Backend (Spring Boot)
-- Spring Security with JWT  
-- MongoDB repositories  
+
+- Spring Security with JWT
+- MongoDB repositories
 - Booking conflict logic:
-  - Time overlap checks  
-  - Weekly closed days  
-  - Holiday blocks  
-  - Custom time blocks  
-- REST APIs following clean structure  
+  - Time overlap checks
+  - Weekly closed days
+  - Holiday blocks
+  - Custom time blocks
+- REST APIs following clean structure
 
 ---
 
 ## Tech Stack
 
 ### Frontend
+
 - Next.js
 - React Hook Form
 - Axios
@@ -71,11 +76,12 @@ This project is built using:
 - Shadcn modals
 
 ### Backend
-- Spring Boot 
-- Spring Security (JWT)  
-- MongoDB  
-- Lombok  
-- Gradle 
+
+- Spring Boot
+- Spring Security (JWT)
+- MongoDB
+- Lombok
+- Gradle
 
 ---
 
@@ -86,29 +92,38 @@ This project is built using:
 ```
 NEXT_PUBLIC_API_URL=http://localhost:8080
 ```
+
 **Run frontend dev server**
+
 ```
 npm run dev
 ```
+
 ---
 
 ### Backend Setup
 
 **Open backend project**
+
 ```
 cd backend
 ```
+
 **Configure application.properties**
+
 ```
 spring.data.mongodb.uri=mongodb://localhost:27017/db_name
 jwt.secret=your_secret_key
 ```
 
 **Run backend**
+
 ```
-mvn spring-boot:run
+gradlew bootRun
 ```
+
 ---
+
 ### Authentication Flow
 
 - User logs in
@@ -117,17 +132,21 @@ mvn spring-boot:run
 - Axios interceptor attaches token for every request
 - Spring validates token & sets SecurityContext
 - Protected routes allow/deny access
---- 
+
+---
 
 ## API Endpoints Overview
 
 **Auth**
+
 ```
 POST /auth/login
-POST /auth/register
+POST /auth/register-user
+POST /auth/register-admin
 ```
 
 **User**
+
 ```
 POST  /user/bookings
 GET   /user/bookings
@@ -137,6 +156,7 @@ PATCH /user/bookings/cancel/{id}
 ```
 
 **Admin**
+
 ```
 POST   /admin/rooms
 GET    /admin/rooms
@@ -148,25 +168,11 @@ GET    /admin/bookingStats
 ```
 
 **Availability Rules**
+
 ```
 POST   /availability
 GET    /availability/{roomId}
 DELETE /availability/{ruleId}
 ```
 
-## Project Structure (Frontend)
-```
-frontend/
-│── app/
-│   ├── dashboard/
-│   │   ├── admin/
-│   │   └── user/
-│   ├── login/
-│   ├── register/
-│   ├── unauthorized/
-│── components/
-│── context/
-│── services/
-│── public/
-
-```
+**Full API Documentation** → [API_documentation.md](docs/API_documentation.md)
