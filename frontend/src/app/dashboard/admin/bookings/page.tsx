@@ -64,7 +64,7 @@ export default function BookingsCalendarPage() {
     }, []);
 
     useEffect(() => {
-        const load = async () =>{
+        const load = async () => {
             await fetchData();
         };
         load();
