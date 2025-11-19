@@ -90,7 +90,10 @@ export default function BookingForm({
       <input
         type="text"
         placeholder="Purpose"
-        {...control.register("purpose", { required: "Purpose is required" })}
+        {...control.register("purpose", {
+          required: "Purpose is required",
+          minLength: { value: 5, message: "Purpose must be a minimum of 5  characters" },
+        })}
         className={`input border rounded p-2 w-full mb-2 focus:outline-none ${errors.purpose ? "border-red-500" : "border-gray-300"
           }`}
       />

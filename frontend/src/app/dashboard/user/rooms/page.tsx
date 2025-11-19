@@ -81,7 +81,7 @@ export default function RoomsPage() {
             reset();
         } catch (error) {
             console.error("Booking failed:", error);
-            const axiosError = error as AxiosError<{message : string}>;
+            const axiosError = error as AxiosError<{ message: string }>;
             const message = axiosError.response?.data?.message || "Something went wrong.";
             toast.error(message);
         }
@@ -174,7 +174,7 @@ export default function RoomsPage() {
         if (activeTab === "calendar" && selectedRoom) {
             handleCalendarClick();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab, selectedRoom]);
 
     const handleSearch = () => {
@@ -205,9 +205,7 @@ export default function RoomsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filterRooms.map((room) => (
-                    <div key={room.id} onClick={() => setSelectedRoom(room)}>
-                        <RoomCard room={room} />
-                    </div>
+                    <RoomCard key={room.id} onClick={() => setSelectedRoom(room)} room={room} />
                 ))}
             </div>
 

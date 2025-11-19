@@ -64,7 +64,7 @@ export default function Sidebar({isOpen, setIsOpen}: Readonly<SidebarProps>) {
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         <div className="p-5 text-2xl font-bold border-b flex justify-between items-center">
-          {isAdmin ? "Admin Panel" : "RoomBooker"}
+          {isAdmin ? "Admin Panel" : "Facility Room Booker"}
          
         </div>
 

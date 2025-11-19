@@ -1,0 +1,2 @@
+mongodb+srv://rohithmohan2000s:Atlas%25rm@cluster0.bc7yput.mongodb.net/facility-room-booking?retryWrites=true&w=majority&appName=Cluster0
+JWT_SECRET=supersecretkeysupersecretkeysupersecretkey
