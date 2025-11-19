@@ -4,6 +4,10 @@ import com.facility.backend.dto.room.RoomResponse;
 import com.facility.backend.model.Room;
 
 public class RoomMapper {
+
+    private RoomMapper(){
+    }
+
     public static RoomResponse toResponse(Room room) {
         return RoomResponse.builder()
                 .id(room.getId())

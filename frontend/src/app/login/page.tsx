@@ -5,6 +5,7 @@ import { login } from "@/services/authService";
 import { useAuth } from "@/context/authContext";
 import LoginForm from "@/components/LoginForm";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,9 +23,10 @@ export default function LoginPage() {
       } else {
         router.push("/dashboard/user/rooms");
       }
-    } catch (err: any) {
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message: string }>
       const message =
-        err.response?.data?.message || "Invalid credentials or server error";
+        axiosError.response?.data?.message || "Invalid credentials or server error";
       toast.error(message);
     }
   };

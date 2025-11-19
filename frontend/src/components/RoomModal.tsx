@@ -54,7 +54,7 @@ export default function RoomModal({
     onClose,
     roomId,
     children,
-}: RoomModalProps) {
+}: Readonly<RoomModalProps>) {
     const [rules, setRules] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
@@ -164,13 +164,13 @@ export default function RoomModal({
                                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 border p-4 rounded-xl bg-gray-50">
                                     {/* Rule Type */}
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Rule Type</label>
+                                        <label htmlFor="ruleType" className="block text-sm font-medium mb-1">Rule Type</label>
                                         <Controller
                                             control={control}
                                             name="ruleType"
                                             render={({ field }) => (
                                                 <Select onValueChange={field.onChange} value={field.value}>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger id="ruleType">
                                                         <SelectValue placeholder="Select type" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -186,20 +186,20 @@ export default function RoomModal({
                                     {/* Conditional inputs */}
                                     {watch("ruleType") === "HOLIDAY" && (
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">Date</label>
-                                            <Input type="date" {...register("date")} />
+                                            <label htmlFor="date" className="block text-sm font-medium mb-1">Date</label>
+                                            <Input id="date" type="date" {...register("date")} />
                                         </div>
                                     )}
 
                                     {watch("ruleType") === "WEEKLY_CLOSED" && (
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">Day of Week</label>
+                                            <label htmlFor="dayOfWeek" className="block text-sm font-medium mb-1">Day of Week</label>
                                             <Controller
                                                 control={control}
                                                 name="dayOfWeek"
                                                 render={({ field }) => (
                                                     <Select onValueChange={field.onChange} value={field.value || ""}>
-                                                        <SelectTrigger><SelectValue placeholder="Select day" /></SelectTrigger>
+                                                        <SelectTrigger id="dayOfWeek"><SelectValue placeholder="Select day" /></SelectTrigger>
                                                         <SelectContent>
                                                             {["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"].map(d => (
                                                                 <SelectItem key={d} value={d}>{d}</SelectItem>
@@ -214,18 +214,18 @@ export default function RoomModal({
                                     {watch("ruleType") === "TIME_BLOCK" && (
                                         <>
                                             <div>
-                                                <label className="block text-sm font-medium mb-1">Date</label>
-                                                <Input type="date" {...register("date")} />
+                                                <label htmlFor="date" className="block text-sm font-medium mb-1">Date</label>
+                                                <Input id="date" type="date" {...register("date")} />
                                             </div>
 
                                             <div className="grid grid-cols-2 gap-2">
                                                 <div>
-                                                    <label className="block text-sm font-medium mb-1">Start Time</label>
-                                                    <Input type="time" {...register("startTime")} />
+                                                    <label htmlFor="startTime" className="block text-sm font-medium mb-1">Start Time</label>
+                                                    <Input id="startTime" type="time" {...register("startTime")} />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium mb-1">End Time</label>
-                                                    <Input type="time" {...register("endTime")} />
+                                                    <label htmlFor="endTime" className="block text-sm font-medium mb-1">End Time</label>
+                                                    <Input id="endTime" type="time" {...register("endTime")} />
                                                 </div>
                                             </div>
                                         </>
@@ -233,8 +233,8 @@ export default function RoomModal({
 
                                     {/* Reason */}
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Reason</label>
-                                        <Input type="text" placeholder="e.g. Maintenance" {...register("reason")} />
+                                        <label htmlFor="reason" className="block text-sm font-medium mb-1">Reason</label>
+                                        <Input id="reason" type="text" placeholder="e.g. Maintenance" {...register("reason")} />
                                     </div>
 
                                     <Button type="submit" className="w-full mt-2">Save Rule</Button>

@@ -1,11 +1,14 @@
 package com.facility.backend.util;
 
 
-import com.facility.backend.dto.availabilityRule.AvailabilityRuleRequest;
-import com.facility.backend.dto.availabilityRule.AvailabilityRuleResponse;
+import com.facility.backend.dto.availability.AvailabilityRuleRequest;
+import com.facility.backend.dto.availability.AvailabilityRuleResponse;
 import com.facility.backend.model.AvailabilityRule;
 
 public class AvailabilityRuleMapper {
+
+    private AvailabilityRuleMapper(){
+    }
 
     public static AvailabilityRule toEntity(AvailabilityRuleRequest dto) {
         if (dto == null) return null;

@@ -1,8 +1,7 @@
 package com.facility.backend.admin.controller;
 
-import com.facility.backend.dto.availabilityRule.AvailabilityRuleRequest;
-import com.facility.backend.dto.availabilityRule.AvailabilityRuleResponse;
-import com.facility.backend.model.AvailabilityRule;
+import com.facility.backend.dto.availability.AvailabilityRuleRequest;
+import com.facility.backend.dto.availability.AvailabilityRuleResponse;
 import com.facility.backend.admin.service.AvailabilityRuleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +32,7 @@ public class AvailabilityRuleController {
 
 //    delete a rule
     @DeleteMapping("/{ruleId}")
-    public ResponseEntity<?> deleteRule(@PathVariable String ruleId, Authentication auth) {
+    public ResponseEntity<String> deleteRule(@PathVariable String ruleId, Authentication auth) {
         availabilityRuleService.deleteRule(ruleId, auth);
         return ResponseEntity.ok("Rule deleted successfully");
     }

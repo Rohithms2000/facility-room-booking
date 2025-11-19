@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -117,7 +116,7 @@ public class UserService {
         List<Room> rooms = roomRepository.findAll();
         return rooms.stream()
                 .map(RoomMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 //    listing all bookings
@@ -130,7 +129,7 @@ public class UserService {
                 .stream()
                 .filter(b -> b.getStatus() != Booking.Status.CANCELLED && b.getStatus() != Booking.Status.REJECTED)
                 .map(BookingMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 //    list bookings for specific room
@@ -138,7 +137,7 @@ public class UserService {
         List<Booking> bookings = bookingRepository.findActiveBookingsByRoom(roomId);
         return bookings.stream()
                 .map(BookingMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 //    cancel booking

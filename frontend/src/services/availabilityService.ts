@@ -1,5 +1,15 @@
 import api from "./api";
 
+export interface Rule {
+    id: string;
+    ruleType: string;
+    date?: string | null;
+    dayOfWeek?: string | null;
+    startTime?: string | null;
+    endTime?: string | null;
+    reason: string;
+}
+
 interface AvailabilityRequest {
     roomId: string;
     ruleType: string;

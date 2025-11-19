@@ -20,7 +20,7 @@ interface CalendarProps {
   onCalendarClick?: () => void;
 }
 
-export default function Calendar({ events, onDateClick, onEventClick }: CalendarProps) {
+export default function Calendar({ events, onDateClick, onEventClick }: Readonly<CalendarProps>) {
   return (
     <div className=" w-full p-6 bg-white rounded-lg shadow-md">
       <FullCalendar

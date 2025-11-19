@@ -11,7 +11,25 @@ interface BookingCardProps {
     onCancel?: () => void;
 }
 
-export default function BookingCard({ booking, roomName, isAdmin, onApprove, onReject, onCancel }: BookingCardProps) {
+export default function BookingCard({ booking, roomName, isAdmin, onApprove, onReject, onCancel }: Readonly<BookingCardProps>) {
+
+    const getBookingStatusClass = (status: string) => {
+        switch (status) {
+            case "PENDING":
+                return "text-blue-500";
+            case "APPROVED":
+                return "text-green-500";
+            case "REJECTED":
+                return "text-red-400";
+            default:
+                return "text-gray-300";
+        }
+    };
+
+    const isCancelDisabled = !(booking.status === "APPROVED" || booking.status === "PENDING");
+
+
+
     return (
         <div
             className="bg-white p-4 space-y-4 cursor-pointer"
@@ -20,14 +38,7 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                 <h2 className="text-xl text-gray-800 font-semibold">{roomName}</h2>
                 <p className="text-gray-800 font-medium mt-2">{booking.purpose}</p>
                 <p
-                    className={`text-sm mt-2 ${booking.status === "PENDING"
-                        ? "text-blue-500"
-                        : booking.status === "APPROVED"
-                            ? "text-green-500"
-                            : booking.status === "REJECTED"
-                                ? "text-red-400"
-                                : "text-gray-300"
-                        }`}
+                    className={`text-sm mt-2 ${getBookingStatusClass(booking.status)}`}
                 >
                     {booking.status}
                 </p>
@@ -52,20 +63,20 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                         </button>
                     </>
                 )}
-                {isAdmin && booking.status !== "PENDING" &&(
+                {isAdmin && booking.status === "APPROVED" && (
                     <button
-                            onClick={onCancel}
-                            className="py-1 px-3 bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
-                        >
-                            Cancel
-                        </button>
+                        onClick={onCancel}
+                        className="py-1 px-3 bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
+                    >
+                        Cancel
+                    </button>
                 )}
                 {!isAdmin && (
                     <button
                         onClick={onCancel}
-                        disabled={!(booking.status === "APPROVED" || booking.status === "PENDING")}
+                        disabled={isCancelDisabled}
                         className={`py-1 px-3
-      ${!(booking.status === "APPROVED" || booking.status === "PENDING")
+      ${isCancelDisabled
                                 ? "bg-gray-400 cursor-not-allowed"
                                 : "bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
                             }`}>

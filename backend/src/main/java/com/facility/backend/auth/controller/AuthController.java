@@ -1,5 +1,7 @@
 package com.facility.backend.auth.controller;
 
+import com.facility.backend.dto.MessageResponse;
+import com.facility.backend.dto.auth.AuthResponse;
 import com.facility.backend.dto.auth.LoginRequest;
 import com.facility.backend.dto.auth.RegisterRequest;
 import com.facility.backend.auth.service.AuthService;
@@ -20,19 +22,19 @@ public class AuthController {
 
 //    register a user
     @PostMapping("/register-user")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest request){
+    public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody RegisterRequest request){
         return ResponseEntity.ok(authService.registerUser(request));
     }
 
 //    register an admin
     @PostMapping("/register-admin")
-    public ResponseEntity<?> registerAdmin(@Valid @RequestBody RegisterRequest request){
+    public ResponseEntity<MessageResponse> registerAdmin(@Valid @RequestBody RegisterRequest request){
         return ResponseEntity.ok(authService.registerAdmin(request));
     }
 
 //    login user/admin
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request){
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request){
         return ResponseEntity.ok(authService.login(request));
     }
 }

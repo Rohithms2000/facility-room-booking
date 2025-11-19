@@ -5,7 +5,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
+  if (globalThis.window !== undefined) {
     const token = localStorage.getItem("token");
 
     const authEndpoints = ["/auth/login", "/auth/register"];

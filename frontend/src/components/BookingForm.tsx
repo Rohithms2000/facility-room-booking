@@ -25,7 +25,7 @@ export default function BookingForm({
   errors,
   handleSubmit,
   onSubmitBooking,
-}: BookingFormProps) {
+}: Readonly<BookingFormProps>) {
   return (
     <form onSubmit={handleSubmit(onSubmitBooking)} className="space-y-4">
       <input
@@ -36,13 +36,14 @@ export default function BookingForm({
       />
 
       {/* Start Time */}
-      <label className="block font-semibold">Start Time</label>
+      <label htmlFor="startTime" className="block font-semibold">Start Time</label>
       <Controller
         name="startTime"
         control={control}
         rules={{ required: "Start time is required" }}
         render={({ field }) => (
           <DatePicker
+            id="startTime"
             selected={field.value}
             onChange={field.onChange}
             showTimeSelect
@@ -57,7 +58,7 @@ export default function BookingForm({
       {errors.startTime && <p className="text-red-500 text-sm">{errors.startTime.message}</p>}
 
       {/* End Time */}
-      <label className="block font-semibold">End Time</label>
+      <label htmlFor="endTime" className="block font-semibold">End Time</label>
       <Controller
         name="endTime"
         control={control}
@@ -70,6 +71,7 @@ export default function BookingForm({
         }}
         render={({ field }) => (
           <DatePicker
+            id="endTime"
             selected={field.value}
             onChange={field.onChange}
             showTimeSelect

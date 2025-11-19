@@ -7,7 +7,7 @@ interface LoginFormProps {
   onSubmitForm: (data: { email: string; password: string }) => void;
 }
 
-export default function LoginForm({ onSubmitForm }: LoginFormProps) {
+export default function LoginForm({ onSubmitForm }: Readonly<LoginFormProps>) {
   const {
     register,
     handleSubmit,

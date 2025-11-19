@@ -7,11 +7,11 @@ interface RoomCardProps {
     onClick?: (room: Room) => void;
 }
 
-export default function RoomCard({ room, onClick }: RoomCardProps) {
+export default function RoomCard({ room, onClick }: Readonly<RoomCardProps>) {
     return (
         <div
             className="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition cursor-pointer"
-            onClick={() => onClick && onClick(room)}
+            onClick={() => onClick?.(room)}
         >
             <div className="mt-3 text-center">
                 <h2 className="text-xl text-gray-800 font-semibold">{room.name}</h2>

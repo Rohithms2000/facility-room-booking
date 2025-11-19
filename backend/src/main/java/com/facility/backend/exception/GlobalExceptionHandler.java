@@ -86,4 +86,11 @@ public class GlobalExceptionHandler {
                 .body(buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI()));
     }
 
+    @ExceptionHandler(DuplicateDataException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateData(DuplicateDataException ex, HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI()));
+    }
+
 }

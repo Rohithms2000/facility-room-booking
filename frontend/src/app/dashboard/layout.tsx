@@ -5,7 +5,7 @@ import { useAuth } from "@/context/authContext";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const { token, role, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -27,7 +27,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (pathname.startsWith("/dashboard/user") && role !== "USER") {
       router.replace("/unauthorized");
-      return;
     }
 
   }, [token, role, pathname, loading, router]);

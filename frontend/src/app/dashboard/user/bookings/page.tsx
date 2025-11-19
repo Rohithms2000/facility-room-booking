@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Calendar from "@/components/BookingCalendar";
 import { getAllBookings, cancelBooking, Booking } from "@/services/bookingService";
-import { getAllRooms, Room } from "@/services/roomService";
+import { getAllRooms } from "@/services/roomService";
 import StatusModal from "@/components/StatusModal";
 import { EventClickArg } from "@fullcalendar/core";
 import { toast } from "react-toastify";
@@ -23,17 +23,15 @@ export default function BookingsCalendarPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<CalendarEvent | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [rooms, setRooms] = useState<Room[]>([]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const [rooms, bookings] = await Promise.all([
+      const [fetchedRooms, bookings] = await Promise.all([
         getAllRooms(),
         getAllBookings(),
       ]);
-      setRooms(rooms);
       const eventsData = bookings.map((b: Booking) => {
-        const room = rooms.find((r) => r.id === b.roomId);
+        const room = fetchedRooms.find((r) => r.id === b.roomId);
         const getStatusColor = (status: string) => {
           switch (status) {
             case "APPROVED":
@@ -64,12 +62,14 @@ export default function BookingsCalendarPage() {
     } catch (err) {
       console.error("Error fetching bookings:", err);
     }
-  };
+  }, []);
 
   useEffect(() => {
-
-    fetchData();
-  }, []);
+    const load = async () => {
+      await fetchData();
+    };
+    load();
+  }, [fetchData]);
 
   const handleEventClick = (arg: EventClickArg) => {
     const clickedEvent = events.find((event) => event.id === arg.event.id);

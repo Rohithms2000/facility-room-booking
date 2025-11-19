@@ -5,6 +5,7 @@ import com.facility.backend.dto.*;
 import com.facility.backend.dto.auth.AuthResponse;
 import com.facility.backend.dto.auth.LoginRequest;
 import com.facility.backend.dto.auth.RegisterRequest;
+import com.facility.backend.exception.DuplicateDataException;
 import com.facility.backend.model.User;
 import com.facility.backend.repository.UserRepository;
 import com.facility.backend.auth.security.UserDetailsImpl;
@@ -33,7 +34,7 @@ public class AuthService {
     public MessageResponse registerUser(RegisterRequest request) {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
-            throw new RuntimeException("User with this email already exists");
+            throw new DuplicateDataException("User with this email already exists");
         }
         User user = User.builder().name(request.getName()).email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(User.Role.USER).build();
         userRepository.save(user);
@@ -45,7 +46,7 @@ public class AuthService {
     public MessageResponse  registerAdmin(RegisterRequest request) {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
-            throw new RuntimeException("User with this email already exists");
+            throw new DuplicateDataException("User with this email already exists");
         }
         User user = User.builder()
                 .name(request.getName())

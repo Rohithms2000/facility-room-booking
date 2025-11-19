@@ -1,29 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getAdminRooms, createRoom, editRoom, deleteRoom, Room } from "@/services/roomService";
 import RoomCard from "@/components/RoomCard";
 import RoomModal from "@/components/RoomModal";
 import RoomCreationForm from "@/components/RoomCreationForm";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export default function RoomCreationPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRoom, setEditingRoom] = useState<Room | null>(null);
 
-  const fetchRooms = async () => {
+  const fetchRooms = useCallback(async () => {
     try {
       const data = await getAdminRooms();
       setRooms(data);
     } catch (err) {
       console.error("Error fetching rooms:", err);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchRooms();
-  }, []);
+    const load = async () => {
+      await fetchRooms();
+    };
+
+    load();
+  }, [fetchRooms]);
 
   const handleOpenModal = (room?: Room) => {
     setEditingRoom(room || null);
@@ -51,9 +56,10 @@ export default function RoomCreationPage() {
       }
       await fetchRooms();
       handleCloseModal();
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error saving room:", err);
-      toast.error(err.response?.data?.message || "Something went wrong");
+      const axiosError = err as AxiosError<{ message: string }>;
+      toast.error(axiosError.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -96,11 +102,11 @@ export default function RoomCreationPage() {
           defaultValues={
             editingRoom
               ? {
-                  name: editingRoom.name,
-                  capacity: editingRoom.capacity,
-                  location: editingRoom.location,
-                  resources: editingRoom.resources || [],
-                }
+                name: editingRoom.name,
+                capacity: editingRoom.capacity,
+                location: editingRoom.location,
+                resources: editingRoom.resources || [],
+              }
               : undefined
           }
           onSubmit={handleSubmit}

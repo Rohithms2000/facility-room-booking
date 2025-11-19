@@ -55,7 +55,7 @@ public class UserController {
 
 //    cancel booking
     @PatchMapping("/bookings/cancel/{id}")
-    public ResponseEntity<?> updateBookingStatus(
+    public ResponseEntity<BookingResponse> updateBookingStatus(
             @PathVariable("id") String bookingId
     ) {
         BookingResponse cancelledBooking = userService.cancelBooking(bookingId);

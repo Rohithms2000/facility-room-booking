@@ -17,7 +17,7 @@ public class RegisterRequest {
 
     @NotBlank(message = "Password is required")
     @Pattern(
-            regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!]).{6,}$",
+            regexp = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[@#$%^&+=!]).{6,}$",
             message = "Password must contain at least one alphabet, one number, one special character, and be at least 6 characters long"
     )
     private String password;

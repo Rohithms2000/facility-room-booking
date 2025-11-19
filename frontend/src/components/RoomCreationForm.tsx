@@ -22,7 +22,7 @@ export default function RoomCreationForm({
   onSubmit,
   submitText,
   onDelete,
-}: RoomFormProps) {
+}: Readonly<RoomFormProps>) {
   const {
     register,
     handleSubmit,
@@ -49,8 +49,9 @@ export default function RoomCreationForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Name */}
       <div>
-        <label className="block font-semibold">Name</label>
+        <label htmlFor="name" className="block font-semibold">Name</label>
         <input
+          id="name"
           type="text"
           {...register("name", {
             required: "Room name is required",
@@ -64,8 +65,9 @@ export default function RoomCreationForm({
 
       {/* Capacity */}
       <div>
-        <label className="block font-semibold">Capacity</label>
+        <label htmlFor="capacity" className="block font-semibold">Capacity</label>
         <input
+          id="capacity"
           type="number"
           {...register("capacity", {
             required: "Capacity is required",
@@ -79,8 +81,9 @@ export default function RoomCreationForm({
 
       {/* Location */}
       <div>
-        <label className="block font-semibold">Location</label>
+        <label htmlFor="location" className="block font-semibold">Location</label>
         <input
+          id="location"
           type="text"
           {...register("location", {
             required: "Location is required",
@@ -94,7 +97,7 @@ export default function RoomCreationForm({
 
       {/* Resources */}
       <div>
-        <label className="block font-semibold">Resources</label>
+        <label htmlFor="resources" className="block font-semibold">Resources</label>
         <Controller
           control={control}
           name="resources"
@@ -104,6 +107,7 @@ export default function RoomCreationForm({
           }}
           render={({ field }) => (
             <Select
+              inputId="resources"
               isMulti
               options={resourceOptions}
               value={resourceOptions.filter((opt) => field.value.includes(opt.value))}

@@ -18,7 +18,7 @@ interface SidebarProps {
   setIsOpen: (value: boolean) => void;
 }
 
-export default function Sidebar({isOpen, setIsOpen}: SidebarProps) {
+export default function Sidebar({isOpen, setIsOpen}: Readonly<SidebarProps>) {
   const pathname = usePathname();
   const { role, logout } = useAuth();
   const isAdmin = role === "ADMIN";

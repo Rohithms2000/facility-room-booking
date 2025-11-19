@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { registerUser, registerAdmin } from "@/services/authService";
 import RegisterForm from "@/components/RegisterForm";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -19,8 +20,9 @@ export default function RegisterPage() {
       if (response) {
         router.push("/login");
       }
-    } catch (err: any) {
-      const errorData = err.response?.data;
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message: string }>;
+      const errorData = axiosError.response?.data;
       let message = "Something went wrong!";
       if (errorData?.message) message = errorData.message;
       toast.error(message);

@@ -1,6 +1,5 @@
 package com.facility.backend.dto.booking;
 
-import com.facility.backend.model.Booking;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,8 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 @Data
 public class BookingRequest {

@@ -15,11 +15,11 @@ import java.util.Date;
 public class JwtService {
     //    key for signing token
     @Value("${jwt.secret}")
-    private String SECRET_KEY;
+    private String secretKey;
 
 
     private Key getSignKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
 //    generates token

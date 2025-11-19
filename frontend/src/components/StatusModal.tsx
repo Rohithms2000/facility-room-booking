@@ -24,7 +24,7 @@ export default function BookingModal({
   onApprove,
   onReject,
   onCancel,
-}: StatusModalProps) {
+}: Readonly<StatusModalProps>) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md p-0 rounded-xl">

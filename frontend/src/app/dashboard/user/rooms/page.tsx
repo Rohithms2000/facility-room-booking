@@ -5,13 +5,14 @@ import RoomCard from "@/components/RoomCard";
 import { getAllRooms, Room } from "@/services/roomService";
 import { Booking, createBooking, getBookingsForRoom } from "@/services/bookingService";
 import BookingModal from "@/components/BookingModal";
-import { getRules } from "@/services/availabilityService";
+import { getRules, Rule } from "@/services/availabilityService";
 import { EventClickArg } from "@fullcalendar/core";
 import { DateClickArg } from "@fullcalendar/interaction";
 import { useForm } from "react-hook-form";
 import SearchBar from "@/components/SearchBar";
 import { BookingFormData } from "@/components/BookingForm";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 interface CalendarEvent {
     id: string;
@@ -78,9 +79,10 @@ export default function RoomsPage() {
             toast.success("Room booked successfully!");
             setSelectedRoom(null);
             reset();
-        } catch (error: any) {
+        } catch (error) {
             console.error("Booking failed:", error);
-            const message = error.response?.data?.message || "Something went wrong.";
+            const axiosError = error as AxiosError<{message : string}>;
+            const message = axiosError.response?.data?.message || "Something went wrong.";
             toast.error(message);
         }
     };
@@ -128,7 +130,7 @@ export default function RoomsPage() {
                 return map[day];
             };
 
-            const ruleEvents = rules.flatMap((rule: any) => {
+            const ruleEvents = rules.flatMap((rule: Rule) => {
                 switch (rule.ruleType) {
                     case "HOLIDAY":
                         return [
@@ -143,7 +145,7 @@ export default function RoomsPage() {
                         return [
                             {
                                 title: `Closed: ${rule.reason}`,
-                                daysOfWeek: [convertDayToNumber(rule.dayOfWeek)],
+                                daysOfWeek: [convertDayToNumber(rule.dayOfWeek!)],
                                 backgroundColor: "#9ca3af",
                             },
                         ];
@@ -153,7 +155,7 @@ export default function RoomsPage() {
                                 title: `Blocked: ${rule.reason}`,
                                 startTime: rule.startTime,
                                 endTime: rule.endTime,
-                                daysOfWeek: [convertDayToNumber(rule.dayOfWeek)],
+                                daysOfWeek: [convertDayToNumber(rule.dayOfWeek!)],
                                 backgroundColor: "#fbbf24",
                             },
                         ];

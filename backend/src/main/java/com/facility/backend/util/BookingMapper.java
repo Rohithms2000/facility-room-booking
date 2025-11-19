@@ -4,6 +4,10 @@ import com.facility.backend.dto.booking.BookingResponse;
 import com.facility.backend.model.Booking;
 
 public class BookingMapper {
+
+    private BookingMapper(){
+    }
+
     public static BookingResponse toResponse(Booking booking) {
         return BookingResponse.builder()
                 .id(booking.getId())

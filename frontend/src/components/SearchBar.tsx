@@ -15,7 +15,7 @@ export default function SearchBar({
   onChange,
   onSearch,
   placeholder = "Search...",
-}: SearchBarProps) {
+}: Readonly<SearchBarProps>) {
   return (
     <div className="flex items-center border-2 rounded-lg mb-4 overflow-hidden w-full">
       <input

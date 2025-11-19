@@ -7,7 +7,7 @@ interface RegisterFormProps {
   onSubmitForm: (data: { name: string; email: string; password: string }) => void;
 }
 
-export default function RegisterForm({ onSubmitForm }: RegisterFormProps) {
+export default function RegisterForm({ onSubmitForm }: Readonly<RegisterFormProps>) {
   const {
     register,
     handleSubmit,

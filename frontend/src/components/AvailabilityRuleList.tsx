@@ -1,24 +1,17 @@
 "use client";
+import { Rule } from "@/services/availabilityService";
 import {
     Trash
 } from "lucide-react";
-interface Rule {
-    id: string;
-    ruleType: string;
-    date?: string | null;
-    dayOfWeek?: string | null;
-    startTime?: string | null;
-    endTime?: string | null;
-    reason: string;
-}
+
 
 interface RulesTableProps {
     rules: Rule[];
     loading: boolean;
-    onDelete: (id: string)=> void;
+    onDelete: (id: string) => void;
 }
 
-export default function AvailabilityRulesList({ rules, loading, onDelete }: RulesTableProps) {
+export default function AvailabilityRulesList({ rules, loading, onDelete }: Readonly<RulesTableProps>) {
     if (loading) {
         return (
             <div className="flex justify-center items-center py-10 text-gray-500">
@@ -34,6 +27,17 @@ export default function AvailabilityRulesList({ rules, loading, onDelete }: Rule
             </div>
         );
     }
+
+    const getRuleTypeClass = (type: string) => {
+        switch (type) {
+            case "HOLIDAY":
+                return "bg-red-100 text-red-700";
+            case "TIME_BLOCK":
+                return "bg-yellow-100 text-yellow-700";
+            default:
+                return "bg-gray-100 text-gray-700";
+        }
+    };
 
     return (
         <div className="overflow-x-auto">
@@ -54,14 +58,7 @@ export default function AvailabilityRulesList({ rules, loading, onDelete }: Rule
                     {rules.map((rule) => (
                         <tr key={rule.id} className="hover:bg-gray-50">
                             <td className="px-4 py-2 border-b font-medium">
-                                <span
-                                    className={`px-2 py-1 text-xs rounded ${rule.ruleType === "HOLIDAY"
-                                            ? "bg-red-100 text-red-700"
-                                            : rule.ruleType === "TIME_BLOCK"
-                                                ? "bg-yellow-100 text-yellow-700"
-                                                : "bg-gray-100 text-gray-700"
-                                        }`}
-                                >
+                                <span className={`px-2 py-1 text-xs rounded ${getRuleTypeClass(rule.ruleType)}`}>
                                     {rule.ruleType}
                                 </span>
                             </td>
@@ -77,7 +74,7 @@ export default function AvailabilityRulesList({ rules, loading, onDelete }: Rule
                             </td>
                             <td className="px-4 py-2 border-b">{rule.reason || "-"}</td>
                             <td className="px-4 py-2 border-b">
-                                <button onClick={()=> onDelete(rule.id)} className="text-red-500 hover:text-red-700"><Trash className="w-5 h-5 "/></button></td>
+                                <button onClick={() => onDelete(rule.id)} className="text-red-500 hover:text-red-700"><Trash className="w-5 h-5 " /></button></td>
                         </tr>
                     ))}
                 </tbody>

@@ -1,7 +1,7 @@
 package com.facility.backend.admin.service;
 
-import com.facility.backend.dto.availabilityRule.AvailabilityRuleRequest;
-import com.facility.backend.dto.availabilityRule.AvailabilityRuleResponse;
+import com.facility.backend.dto.availability.AvailabilityRuleRequest;
+import com.facility.backend.dto.availability.AvailabilityRuleResponse;
 import com.facility.backend.exception.ResourceNotFoundException;
 import com.facility.backend.exception.UnauthorizedAccessException;
 import com.facility.backend.model.AvailabilityRule;
@@ -16,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +50,7 @@ public class AvailabilityRuleService {
 
         return rules.stream()
                 .map(AvailabilityRuleMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 //    delete a rule

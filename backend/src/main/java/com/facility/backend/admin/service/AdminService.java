@@ -85,7 +85,7 @@ public class AdminService {
         List<Room> rooms = roomRepository.findByCreatedBy(admin.getId());
         return rooms.stream()
                 .map(RoomMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 //    update status of a booking
@@ -110,7 +110,7 @@ public class AdminService {
         List<Room> rooms = roomRepository.findByCreatedBy(admin.getId());
         List<String> roomIds = rooms.stream()
                 .map(Room::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         List<Booking> bookings = bookingRepository.findByRoomIdIn(roomIds);
 

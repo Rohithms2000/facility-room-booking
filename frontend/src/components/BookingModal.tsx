@@ -52,7 +52,7 @@ export default function BookingModal({
   control,
   errors,
   handleSubmit,
-}: ModalProps) {
+}: Readonly<ModalProps>) {
 
   if (!room) return null;
 

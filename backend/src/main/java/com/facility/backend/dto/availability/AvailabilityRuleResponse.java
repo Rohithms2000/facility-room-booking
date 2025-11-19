@@ -1,4 +1,4 @@
-package com.facility.backend.dto.availabilityRule;
+package com.facility.backend.dto.availability;
 
 import com.facility.backend.model.AvailabilityRule.RuleType;
 import lombok.Builder;

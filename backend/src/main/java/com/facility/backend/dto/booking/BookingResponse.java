@@ -4,9 +4,6 @@ import com.facility.backend.model.Booking;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-
 @Data
 @Builder
 public class BookingResponse {
