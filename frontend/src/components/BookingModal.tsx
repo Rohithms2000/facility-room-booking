@@ -5,7 +5,7 @@ import Calendar from "./BookingCalendar";
 import { Room } from "@/services/roomService";
 import { DateClickArg } from "@fullcalendar/interaction";
 import { EventClickArg } from "@fullcalendar/core";
-import { Control, FieldErrors, UseFormHandleSubmit, UseFormReset } from "react-hook-form";
+import { Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormReset } from "react-hook-form";
 
 import {
   Dialog,
@@ -33,6 +33,7 @@ interface ModalProps {
   activeTab: "book" | "calendar";
   setActiveTab: React.Dispatch<React.SetStateAction<"book" | "calendar">>;
   control: Control<BookingFormData>;
+  register: UseFormRegister<BookingFormData>;
   errors: FieldErrors<BookingFormData>;
   handleSubmit: UseFormHandleSubmit<BookingFormData>;
   reset: UseFormReset<BookingFormData>;
@@ -50,6 +51,7 @@ export default function BookingModal({
   activeTab,
   setActiveTab,
   control,
+  register,
   errors,
   handleSubmit,
 }: Readonly<ModalProps>) {
@@ -95,6 +97,7 @@ export default function BookingModal({
             <BookingForm
               room={room}
               control={control}
+              register={register}
               errors={errors}
               handleSubmit={handleSubmit}
               onSubmitBooking={(data) => {

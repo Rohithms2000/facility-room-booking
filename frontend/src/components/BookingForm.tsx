@@ -1,6 +1,6 @@
 "use client";
 
-import { Controller, Control, FieldErrors, UseFormHandleSubmit } from "react-hook-form";
+import { Controller, Control, FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import { Room } from "@/services/roomService";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -14,6 +14,7 @@ export interface BookingFormData {
 interface BookingFormProps {
   room: Room;
   control: Control<BookingFormData>;
+  register: UseFormRegister<BookingFormData>;
   errors: FieldErrors<BookingFormData>;
   handleSubmit: UseFormHandleSubmit<BookingFormData>;
   onSubmitBooking: (data: BookingFormData) => void;
@@ -22,6 +23,7 @@ interface BookingFormProps {
 export default function BookingForm({
   room,
   control,
+  register,
   errors,
   handleSubmit,
   onSubmitBooking,
@@ -90,7 +92,7 @@ export default function BookingForm({
       <input
         type="text"
         placeholder="Purpose"
-        {...control.register("purpose", {
+        {...register("purpose", {
           required: "Purpose is required",
           minLength: { value: 5, message: "Purpose must be a minimum of 5  characters" },
         })}

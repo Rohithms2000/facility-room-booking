@@ -36,6 +36,7 @@ export default function RoomsPage() {
         setValue,
         reset,
         control,
+        register,
         formState: { errors },
     } = useForm<BookingFormData>({
         defaultValues: {
@@ -221,6 +222,7 @@ export default function RoomsPage() {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 control={control}
+                register={register}
                 errors={errors}
                 handleSubmit={handleSubmit}
                 reset={reset}
