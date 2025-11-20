@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation"
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 type AuthContextType = {
   token: string | null;
@@ -14,43 +14,63 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
-  const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedRole = localStorage.getItem("role");
-    
-    if (storedToken) setToken(storedToken);
-    if (storedRole) setRole(storedRole);
+  const [token, setToken] = useState<string | null>(() => {
+    if (globalThis.window === undefined) return null;
+    return localStorage.getItem("token");
+  });
 
-    setLoading(false);
+  const [role, setRole] = useState<string | null>(() => {
+    if (globalThis.window === undefined) return null;
+    return localStorage.getItem("role");
+  });
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(false);
+    }
+    load();
   }, []);
 
 
-  const updateToken = (newToken: string | null) => {
+
+  const updateToken = useCallback((newToken: string | null) => {
     setToken(newToken);
     if (newToken) localStorage.setItem("token", newToken);
     else localStorage.removeItem("token");
-  };
+  }, []);
 
-  const updateRole = (newRole: string | null) => {
+  const updateRole = useCallback((newRole: string | null) => {
     setRole(newRole);
     if (newRole) localStorage.setItem("role", newRole);
     else localStorage.removeItem("role");
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     setToken(null);
     setRole(null);
     router.push("/login")
-  };
+  }, [router]);
+
+  const value = useMemo(
+    () => ({
+      token,
+      setToken: updateToken,
+      role,
+      setRole: updateRole,
+      logout,
+      loading,
+    }),
+    [token, role, logout, updateRole, updateToken, loading]
+  );
+
+
   return (
-    <AuthContext.Provider value={{ token, setToken: updateToken, role, setRole: updateRole, logout, loading }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
