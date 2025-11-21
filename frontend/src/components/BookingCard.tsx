@@ -32,7 +32,7 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
 
     return (
         <div
-            className="bg-white p-4 space-y-4 cursor-pointer"
+            className="bg-white p-4 space-y-4"
         >
             <div className="mt-3 text-center">
                 <h2 className="text-xl text-gray-800 font-semibold">{roomName}</h2>
@@ -50,14 +50,14 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                     <>
                         <button
                             onClick={onApprove}
-                            className="py-1 px-3 bg-blue-500/50 border-1 border-blue-500 hover:text-white hover:bg-blue-500"
+                            className="py-1 px-3 bg-blue-500/50 border-1 border-blue-500 hover:text-white hover:bg-blue-500 cursor-pointer"
                         >
                             Approve
                         </button>
 
                         <button
                             onClick={onReject}
-                            className="py-1 px-3 bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
+                            className="py-1 px-3 bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500 cursor-pointer"
                         >
                             Reject
                         </button>
@@ -66,7 +66,7 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                 {isAdmin && booking.status === "APPROVED" && (
                     <button
                         onClick={onCancel}
-                        className="py-1 px-3 bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
+                        className="py-1 px-3 bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500 cursor-pointer"
                     >
                         Cancel
                     </button>
@@ -78,7 +78,7 @@ export default function BookingCard({ booking, roomName, isAdmin, onApprove, onR
                         className={`py-1 px-3
       ${isCancelDisabled
                                 ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500"
+                                : "bg-red-500/50 border-1 border-red-500 hover:text-white hover:bg-red-500 cursor-pointer"
                             }`}>
                         Cancel
                     </button>

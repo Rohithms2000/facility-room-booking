@@ -130,14 +130,14 @@ export default function RoomCreationForm({
           <button
             type="button"
             onClick={onDelete}
-            className="border-1 border-red-500 bg-red-500/40 px-4 py-2 hover:text-white hover:bg-red-500 transition duration-200"
+            className="border-1 border-red-500 bg-red-500/40 px-4 py-2 hover:text-white hover:bg-red-500 transition duration-200 cursor-pointer"
           >
             Delete
           </button>
         )}
         <button
           type="submit"
-          className="border-1 border-green-500 bg-green-500/40 px-4 py-2 hover:text-white hover:bg-green-500 transition duration-200"
+          className="border-1 border-green-500 bg-green-500/40 px-4 py-2 hover:text-white hover:bg-green-500 transition duration-200 cursor-pointer"
         >
           {submitText}
         </button>
