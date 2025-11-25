@@ -1,0 +1,8 @@
+package com.facility.backend.exception;
+
+public class ActionNotAllowedException extends RuntimeException {
+    public ActionNotAllowedException(String message) {
+        super(message);
+    }
+}
+

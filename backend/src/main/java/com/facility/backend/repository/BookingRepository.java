@@ -2,24 +2,15 @@ package com.facility.backend.repository;
 
 import com.facility.backend.model.Booking;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 
-import java.time.Instant;
 import java.util.List;
 
-public interface BookingRepository extends MongoRepository<Booking, String> {
-
-//    conflict detection logic(overlapping check)
-    @Query("{ 'roomId': ?0, 'startTime': { $lt: ?2 }, 'endTime': { $gt: ?1 }, 'status': { $nin: ['CANCELLED', 'REJECTED'] } }")
-    List<Booking> findConflictBookings(String roomId, Instant startTime, Instant endTime);
+public interface BookingRepository extends MongoRepository<Booking, String>, CustomBookingRepository {
 
     List<Booking> findByUserId(String userId);
 
-//    fetches only active bookings(CANCELLED/REJECTED ignored)
-    @Query("{ 'roomId': ?0, 'status': { $nin: ['CANCELLED', 'REJECTED'] } }")
-    List<Booking> findActiveBookingsByRoom(String roomId);
-
     List<Booking> findByRoomIdIn(List<String> roomIds);
 
+    List<Booking> findByRoomId(String roomId);
 
 }

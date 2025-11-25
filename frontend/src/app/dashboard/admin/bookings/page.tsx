@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Calendar from "@/components/BookingCalendar";
 import { Booking, getBookingsForAdmin, updateBookingStatus } from "@/services/bookingService";
 import StatusModal from "@/components/StatusModal";
-import { getAllRooms } from "@/services/roomService";
+import { getAdminRooms } from "@/services/roomService";
 import { EventClickArg } from "@fullcalendar/core";
 import { toast } from "react-toastify";
 
@@ -27,7 +27,7 @@ export default function BookingsCalendarPage() {
     const fetchData = useCallback(async () => {
         try {
             const [fetchedRooms, bookings] = await Promise.all([
-                getAllRooms(),
+                getAdminRooms(),
                 getBookingsForAdmin(),
             ]);
             const eventsData = bookings.map((b: Booking) => {

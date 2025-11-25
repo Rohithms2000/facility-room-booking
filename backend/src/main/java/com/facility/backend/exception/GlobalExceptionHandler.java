@@ -79,8 +79,8 @@ public class GlobalExceptionHandler {
                 .body(buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request.getRequestURI()));
     }
     
-    @ExceptionHandler(BookingNotAllowedException.class)
-    public ResponseEntity<ErrorResponse> handleBookingNotAllowed(BookingNotAllowedException ex, HttpServletRequest request) {
+    @ExceptionHandler(ActionNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleActionNotAllowed(ActionNotAllowedException ex, HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI()));

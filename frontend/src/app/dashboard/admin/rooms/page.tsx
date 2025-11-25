@@ -7,11 +7,14 @@ import RoomModal from "@/components/RoomModal";
 import RoomCreationForm from "@/components/RoomCreationForm";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 
 export default function RoomCreationPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRoom, setEditingRoom] = useState<Room | null>(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+
 
   const fetchRooms = useCallback(async () => {
     try {
@@ -72,6 +75,8 @@ export default function RoomCreationPage() {
       toast.success("Room deleted successfully!");
     } catch (err) {
       console.error("Error deleting room:", err);
+      const axiosError = err as AxiosError<{ message: string }>;
+      toast.error(axiosError.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -111,9 +116,16 @@ export default function RoomCreationPage() {
           }
           onSubmit={handleSubmit}
           submitText={editingRoom ? "Update" : "Create"}
-          onDelete={editingRoom ? handleDelete : undefined}
+          onDelete={editingRoom ? () => setConfirmDeleteOpen(true) : undefined}
+
         />
       </RoomModal>
+      <ConfirmDeleteModal
+        open={confirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
+        onConfirm={handleDelete}
+      />
+
     </div>
   );
 }

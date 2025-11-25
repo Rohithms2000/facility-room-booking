@@ -77,7 +77,7 @@ export default function RoomsPage() {
                 purpose: data.purpose,
             });
 
-            toast.success("Room booked successfully!");
+            toast.success("Booking request submitted. Waiting for approval");
             setSelectedRoom(null);
             reset();
         } catch (error) {

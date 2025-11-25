@@ -8,12 +8,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
@@ -22,8 +23,8 @@ public class UserController {
 
 //    book a room
     @PostMapping("/bookings")
-    public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request, Authentication auth){
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createBooking(request, auth));
+    public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createBooking(request));
     }
 
 //    get all available rooms
@@ -37,8 +38,8 @@ public class UserController {
 
 //    get all the bookings to check availability
     @GetMapping("/bookings")
-    public ResponseEntity<List<BookingResponse>> getAllBookings(Authentication auth){
-        List<BookingResponse> bookings = userService.getAllBookings(auth);
+    public ResponseEntity<List<BookingResponse>> getAllBookings(){
+        List<BookingResponse> bookings = userService.getAllBookings();
         return bookings.isEmpty()
                 ? ResponseEntity.noContent().build()
                 :ResponseEntity.ok(bookings);

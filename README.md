@@ -48,7 +48,7 @@ This project is built using:
 - FullCalendar for scheduling
 - React hook form for form handling
 - Tailwind CSS styling
-- Resact-Toastify for notifications
+- React-Toastify for notifications
 
 ### Backend (Spring Boot)
 
@@ -68,17 +68,18 @@ This project is built using:
 ### Frontend
 
 - Next.js
+- TypeScript
 - React Hook Form
 - Axios
 - Tailwind CSS
 - FullCalendar
 - React-Toastify
-- Shadcn modals
+- Shadcn/UI
 
 ### Backend
 
 - Spring Boot
-- Spring Security (JWT)
+- Spring Security + JWT Authentication
 - MongoDB
 - Lombok
 - Gradle
@@ -87,15 +88,22 @@ This project is built using:
 
 ### Frontend Setup
 
-**Create .env inside /frontend:**
+**Open frontend project**
+
+```
+cd frontend
+```
+
+**Create .env**
 
 ```
 NEXT_PUBLIC_API_URL=http://localhost:8080
 ```
 
-**Run frontend dev server**
+**Run development server**
 
 ```
+npm install
 npm run dev
 ```
 
@@ -119,7 +127,7 @@ jwt.secret=your_secret_key
 **Run backend**
 
 ```
-gradlew bootRun
+./gradlew bootRun
 ```
 
 ---

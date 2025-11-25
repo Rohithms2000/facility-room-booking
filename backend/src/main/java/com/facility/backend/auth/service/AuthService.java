@@ -36,7 +36,12 @@ public class AuthService {
         if (existingUser.isPresent()) {
             throw new DuplicateDataException("User with this email already exists");
         }
-        User user = User.builder().name(request.getName()).email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(User.Role.USER).build();
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(User.Role.USER)
+                .build();
         userRepository.save(user);
 
         return new MessageResponse("User registered successfully. Please log in.");

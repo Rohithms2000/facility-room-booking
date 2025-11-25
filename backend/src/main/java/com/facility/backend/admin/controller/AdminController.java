@@ -10,12 +10,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
@@ -24,8 +25,8 @@ public class AdminController {
 
 //    create a room
     @PostMapping("/rooms")
-    public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomRequest request, Authentication auth){
-        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createRoom(request, auth));
+    public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createRoom(request));
     }
 
 //    update a room
@@ -52,8 +53,8 @@ public class AdminController {
 
 //    list the bookings for the rooms created by admin
     @GetMapping("/bookings")
-    public ResponseEntity<List<BookingResponse>> getBookingsForAdmin(Authentication auth){
-        List<BookingResponse> bookings = adminService.getBookingsForAdmin(auth);
+    public ResponseEntity<List<BookingResponse>> getBookingsForAdmin(){
+        List<BookingResponse> bookings = adminService.getBookingsForAdmin();
         return bookings.isEmpty()
                 ? ResponseEntity.noContent().build()
                 :ResponseEntity.ok(bookings);
@@ -61,8 +62,8 @@ public class AdminController {
 
 //    list the rooms created by admin
     @GetMapping("/rooms")
-    public ResponseEntity<List<RoomResponse>> getRooms(Authentication auth){
-        List<RoomResponse> bookings = adminService.getRooms(auth);
+    public ResponseEntity<List<RoomResponse>> getRooms(){
+        List<RoomResponse> bookings = adminService.getRooms();
         return bookings.isEmpty()
                 ? ResponseEntity.noContent().build()
                 :ResponseEntity.ok(bookings);
@@ -70,8 +71,8 @@ public class AdminController {
 
 //    get booking stats for admin
     @GetMapping("/bookingStats")
-    public ResponseEntity<BookingStatsResponse> getBookingStatsForAdmin(Authentication auth){
-        BookingStatsResponse bookingStats = adminService.getBookingStatsForAdmin(auth);
+    public ResponseEntity<BookingStatsResponse> getBookingStatsForAdmin(){
+        BookingStatsResponse bookingStats = adminService.getBookingStatsForAdmin();
         return ResponseEntity.ok(bookingStats);
     }
 }

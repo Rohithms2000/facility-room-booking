@@ -9,10 +9,9 @@ import com.facility.backend.model.Room;
 import com.facility.backend.model.User;
 import com.facility.backend.repository.AvailabilityRuleRepository;
 import com.facility.backend.repository.RoomRepository;
-import com.facility.backend.auth.security.UserDetailsImpl;
 import com.facility.backend.util.AvailabilityRuleMapper;
+import com.facility.backend.util.CurrentUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +22,11 @@ public class AvailabilityRuleService {
 
     private final AvailabilityRuleRepository availabilityRuleRepository;
     private final RoomRepository roomRepository;
+    private final CurrentUserService currentUserService;
 
 //    add a rule
-    public AvailabilityRuleResponse addRule(AvailabilityRuleRequest ruleRequest, Authentication auth) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        User admin = userDetails.getUser();
+    public AvailabilityRuleResponse addRule(AvailabilityRuleRequest ruleRequest) {
+        User admin = currentUserService.getCurrentUser();
 
         Room room = roomRepository.findById(ruleRequest.getRoomId())
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
@@ -54,9 +53,8 @@ public class AvailabilityRuleService {
     }
 
 //    delete a rule
-    public void deleteRule(String ruleId, Authentication auth) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        User admin = userDetails.getUser();
+    public void deleteRule(String ruleId) {
+        User admin = currentUserService.getCurrentUser();
 
         AvailabilityRule rule = availabilityRuleRepository.findById(ruleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
