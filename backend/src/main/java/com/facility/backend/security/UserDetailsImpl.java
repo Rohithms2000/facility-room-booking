@@ -1,4 +1,4 @@
-package com.facility.backend.auth.security;
+package com.facility.backend.security;
 
 import com.facility.backend.model.User;
 import com.facility.backend.model.User.Role;

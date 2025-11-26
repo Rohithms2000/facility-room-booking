@@ -1,7 +1,5 @@
-package com.facility.backend.auth.security;
+package com.facility.backend.security;
 
-import com.facility.backend.auth.service.JwtService;
-import com.facility.backend.auth.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

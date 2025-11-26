@@ -1,6 +1,6 @@
 package com.facility.backend.util;
 
-import com.facility.backend.auth.security.UserDetailsImpl;
+import com.facility.backend.security.UserDetailsImpl;
 import com.facility.backend.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

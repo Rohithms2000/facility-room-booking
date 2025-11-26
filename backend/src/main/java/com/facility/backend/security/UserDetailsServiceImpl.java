@@ -1,8 +1,7 @@
-package com.facility.backend.auth.service;
+package com.facility.backend.security;
 
 import com.facility.backend.model.User;
 import com.facility.backend.repository.UserRepository;
-import com.facility.backend.auth.security.UserDetailsImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

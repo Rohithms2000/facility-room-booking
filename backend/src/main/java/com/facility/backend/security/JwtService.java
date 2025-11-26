@@ -1,4 +1,4 @@
-package com.facility.backend.auth.service;
+package com.facility.backend.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
