@@ -29,9 +29,8 @@ export default function RegisterForm({ onSubmitForm }: Readonly<RegisterFormProp
       <input
         type="text"
         placeholder="Name"
-        className={`input border rounded p-2 w-full mb-2 focus:outline-none ${
-          errors.name ? "border-red-500" : "border-gray-300"
-        }`}
+        className={`input border rounded p-2 w-full mb-2 focus:outline-none ${errors.name ? "border-red-500" : "border-gray-300"
+          }`}
         {...register("name", {
           required: "Name is required",
           minLength: {
@@ -47,9 +46,8 @@ export default function RegisterForm({ onSubmitForm }: Readonly<RegisterFormProp
       <input
         type="email"
         placeholder="Email"
-        className={`input border rounded p-2 w-full mb-2 focus:outline-none ${
-          errors.email ? "border-red-500" : "border-gray-300"
-        }`}
+        className={`input border rounded p-2 w-full mb-2 focus:outline-none ${errors.email ? "border-red-500" : "border-gray-300"
+          }`}
         {...register("email", {
           required: "Email is required",
           pattern: {
@@ -65,14 +63,14 @@ export default function RegisterForm({ onSubmitForm }: Readonly<RegisterFormProp
       <input
         type="password"
         placeholder="Password"
-        className={`input border rounded p-2 w-full mb-2 focus:outline-none ${
-          errors.password ? "border-red-500" : "border-gray-300"
-        }`}
+        className={`input border rounded p-2 w-full mb-2 focus:outline-none ${errors.password ? "border-red-500" : "border-gray-300"
+          }`}
         {...register("password", {
           required: "Password is required",
-          minLength: {
-            value: 6,
-            message: "Password must be at least 6 characters",
+          pattern: {
+            value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/,
+            message:
+              "Password must be at least 6 characters and include letters, numbers, and symbols",
           },
           onChange: () => clearErrors("password"),
         })}
@@ -83,9 +81,8 @@ export default function RegisterForm({ onSubmitForm }: Readonly<RegisterFormProp
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`bg-blue-600 text-white w-full hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 font-medium rounded-lg px-4 py-2 mt-2 ${
-          isSubmitting ? "opacity-60 cursor-not-allowed" : ""
-        }`}
+        className={`bg-blue-600 text-white w-full hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 font-medium rounded-lg px-4 py-2 mt-2 ${isSubmitting ? "opacity-60 cursor-not-allowed" : ""
+          }`}
       >
         {isSubmitting ? "Registering..." : "Register"}
       </button>
