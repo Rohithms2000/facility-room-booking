@@ -17,18 +17,25 @@ public class CustomRoomRepositoryImpl implements  CustomRoomRepository{
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public List<Room> searchRooms(Integer minCapacity, Integer maxCapacity, String location, List<String> resources){
+    public List<Room> searchRooms(Integer minCapacity, Integer maxCapacity, String location, List<String> resources) {
 
-        List<Criteria> orCriteria = new ArrayList<>();
+        List<Criteria> andCriteria = new ArrayList<>();
+
         if (minCapacity != null && maxCapacity != null) {
-            orCriteria.add(Criteria.where("capacity").gte(minCapacity).lte(maxCapacity));
+            andCriteria.add(Criteria.where("capacity").gte(minCapacity).lte(maxCapacity));
         }
-        if (location != null) orCriteria.add(Criteria.where("location").is(location));
-        if (resources != null && !resources.isEmpty()) orCriteria.add(Criteria.where("resources").in(resources));
+
+        if (location != null && !location.isEmpty()) {
+            andCriteria.add(Criteria.where("location").is(location));
+        }
+
+        if (resources != null && !resources.isEmpty()) {
+            andCriteria.add(Criteria.where("resources").all(resources));
+        }
 
         Query query = new Query();
-        if (!orCriteria.isEmpty()) {
-            query.addCriteria(new Criteria().orOperator(orCriteria.toArray(new Criteria[0])));
+        if (!andCriteria.isEmpty()) {
+            query.addCriteria(new Criteria().andOperator(andCriteria.toArray(new Criteria[0])));
         }
 
         return mongoTemplate.find(query, Room.class);
