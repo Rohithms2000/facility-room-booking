@@ -6,7 +6,7 @@ export interface Room {
   location: string;
   capacity: number | null;
   resources: string[];
-  imageUrl?:string;
+  imageUrl?: string;
 }
 export interface RoomRequest {
   name: string;
@@ -15,8 +15,32 @@ export interface RoomRequest {
   resources: string[];
 }
 
-export const getAllRooms = async (): Promise<Room[]> => {
-  const response = await api.get("/user/rooms");
+export interface RoomFilterRequest {
+  minCapacity?: number | string;
+  maxCapacity?: number | string;
+  location?: string;
+  resources?: string[];
+}
+
+export const getRooms = async (filters: RoomFilterRequest): Promise<Room[]> => {
+
+  const params = new URLSearchParams();
+  if (filters?.minCapacity !== "" && filters?.minCapacity !== undefined) {
+    params.append("minCapacity", String(filters.minCapacity));
+  }
+  if (filters?.maxCapacity !== "" && filters?.maxCapacity !== undefined) {
+    params.append("maxCapacity", String(filters.maxCapacity));
+  }
+  if (filters.location) params.append("location", filters.location);
+
+  if (Array.isArray(filters.resources) && filters.resources.length > 0) {
+    for (const res of filters.resources) {
+      params.append("resources", res);
+    }
+
+  }
+
+  const response = await api.get(`/user/rooms?${params.toString()}`);
   return response.data;
 };
 

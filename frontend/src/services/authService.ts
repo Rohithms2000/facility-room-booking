@@ -1,5 +1,16 @@
 import api from "./api";
-import { LoginRequest, RegisterRequest } from "@/types/auth";
+
+export interface RegisterRequest {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export interface LoginRequest {
+    email: string;
+    password: string;
+}
+
 
 export const login = async (data: LoginRequest) => {
   const response = await api.post("/auth/login", data);

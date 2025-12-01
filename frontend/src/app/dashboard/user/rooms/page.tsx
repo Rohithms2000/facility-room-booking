@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from "react";
 import RoomCard from "@/components/RoomCard";
-import { getAllRooms, Room } from "@/services/roomService";
+import { getRooms, Room, RoomFilterRequest } from "@/services/roomService";
 import { Booking, createBooking, getBookingsForRoom } from "@/services/bookingService";
 import BookingModal from "@/components/BookingModal";
 import { getRules, Rule } from "@/services/availabilityService";
 import { EventClickArg } from "@fullcalendar/core";
 import { DateClickArg } from "@fullcalendar/interaction";
 import { useForm } from "react-hook-form";
-import SearchBar from "@/components/SearchBar";
 import { BookingFormData } from "@/components/BookingForm";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+import RoomFilter from "@/components/RoomFilter";
+import { Button } from "@/components/ui/button";
+import SearchBar from "@/components/SearchBar";
 
 interface CalendarEvent {
     id: string;
@@ -29,6 +31,8 @@ export default function RoomsPage() {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [events, setEvents] = useState<CalendarEvent[]>([]);
     const [activeTab, setActiveTab] = useState<"book" | "calendar">("book");
+    const [filters, setFilters] = useState<RoomFilterRequest>({});
+    const [showFilters, setShowFilters] = useState(false);
     const [query, setQuery] = useState("");
 
     const {
@@ -49,7 +53,7 @@ export default function RoomsPage() {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const data = await getAllRooms();
+                const data = await getRooms({});
                 setRooms(data);
                 setFilterRooms(data);
             } catch (err) {
@@ -178,14 +182,22 @@ export default function RoomsPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab, selectedRoom]);
 
+    const handleFilter = async (data: RoomFilterRequest) => {
+        setFilters(data);
+        console.log(filters);
+        const filteredRooms = await getRooms(data);
+        setRooms(filteredRooms);
+        setFilterRooms(filteredRooms);
+    };
+
     const handleSearch = () => {
         if (query) {
-            const filteredRooms = rooms.filter(room =>
+            const search = rooms.filter(room =>
                 room.name.toLowerCase().includes(query.toLowerCase())
                 || room.location.toLowerCase().includes(query.toLowerCase())
                 || room.resources.some(value => value.toLowerCase().includes(query.toLowerCase()))
             );
-            setFilterRooms(filteredRooms);
+            setFilterRooms(search);
         } else {
             setFilterRooms(rooms);
         }
@@ -197,6 +209,18 @@ export default function RoomsPage() {
     return (
         <div className="flex-1 bg-gray-100 p-8 overflow-y-auto">
             <h1 className="text-3xl font-bold text-center mb-8">Available Rooms</h1>
+            <div className="flex justify-end mb-4">
+                <Button
+                    variant="outline"
+                    onClick={() => setShowFilters(prev => !prev)}
+                >
+                    Filter Rooms
+                </Button>
+            </div>
+
+            {showFilters && (
+                <RoomFilter onFilter={handleFilter} />
+            )}
             <SearchBar
                 value={query}
                 onChange={setQuery}

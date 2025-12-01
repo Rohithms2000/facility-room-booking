@@ -28,13 +28,16 @@ public class UserController {
     }
 
 //    get all available rooms
-    @GetMapping("/rooms")
-    public ResponseEntity<List<RoomResponse>> getAllRooms(){
-        List<RoomResponse> rooms = userService.getAllRooms();
-        return rooms.isEmpty()
-                ? ResponseEntity.noContent().build()
-                :ResponseEntity.ok(rooms);
-    }
+@GetMapping("/rooms")
+public ResponseEntity<List<RoomResponse>> getRooms(@RequestParam(required = false) Integer minCapacity,
+                                                   @RequestParam(required = false) Integer maxCapacity,
+                                                   @RequestParam(required = false) String location,
+                                                   @RequestParam(required = false) List<String> resources) {
+    List<RoomResponse> rooms = userService.getRooms(minCapacity, maxCapacity, location, resources);
+    return rooms.isEmpty()
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.ok(rooms);
+}
 
 //    get all the bookings to check availability
     @GetMapping("/bookings")

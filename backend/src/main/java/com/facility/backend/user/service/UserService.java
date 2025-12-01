@@ -59,9 +59,9 @@ public class UserService {
         return BookingMapper.toResponse(savedBooking);
     }
 
-//    listing all rooms
-    public List<RoomResponse> getAllRooms(){
-        List<Room> rooms = roomRepository.findAll();
+//    listing rooms (filter)
+    public List<RoomResponse> getRooms(Integer minCapacity, Integer maxCapacity, String location, List<String> resources ){
+        List<Room> rooms = roomRepository.searchRooms(minCapacity, maxCapacity, location, resources);
         return rooms.stream()
                 .map(RoomMapper::toResponse)
                 .toList();
