@@ -25,8 +25,11 @@ export default function LoginPage() {
       }
     } catch (err) {
       const axiosError = err as AxiosError<{ message: string }>
+      if (!axiosError.response) {
+        return;
+      }
       const message =
-        axiosError.response?.data?.message || "Invalid credentials or server error";
+        axiosError.response.data.message || "Invalid credentials or server error";
       toast.error(message);
     }
   };
