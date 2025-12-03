@@ -31,7 +31,18 @@ public class AuthService {
 
     private final JwtService jwtService;
 
-//    register user with role USER
+    /**
+     * Registers a new normal user using the details provided in the registration request.
+     * This method validates if the email is unique and a new user account is created and
+     * assigned with a default USER role.
+     *
+     * @param request the registration details of the user
+     * @return a success message wrapped in {@link MessageResponse}
+     *
+     * @throws DuplicateDataException if a user with the given email already exists
+     * @throws IllegalArgumentException if the request object is null or contains invalid data.
+     */
+
     public MessageResponse registerUser(RegisterRequest request) {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
@@ -48,7 +59,17 @@ public class AuthService {
         return new MessageResponse("User registered successfully. Please log in.");
     }
 
-//    register admin with role ADMIN
+    /**
+     * Registers a new admin user using the details provided in the registration request.
+     * This method validates if the email is unique and a new user account is created and
+     * assigned with a default ADMIN role.
+     *
+     * @param request the registration details of the user
+     * @return a success message wrapped in {@link MessageResponse}
+     *
+     * @throws DuplicateDataException if a user with the given email already exists
+     * @throws IllegalArgumentException if the request object is null or contains invalid data.
+     */
     public MessageResponse  registerAdmin(RegisterRequest request) {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
@@ -65,7 +86,15 @@ public class AuthService {
         return new MessageResponse("Admin registered successfully. Please log in.");
     }
 
-//    login user/admin, provide token along with role
+    /**
+     * Authenticates a user using the credentials provided in the login request.
+     * This method delegates authentication to the configured {@link AuthenticationManager}.
+     * On successful authentication, a JWT token is generated for the authenticated user.
+     * The response contains the token along with basic user details.
+     *
+     * @param request the login credentials (email and password)
+     * @return an {@link AuthResponse} containing the JWT token, username, role, and a success message
+     */
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

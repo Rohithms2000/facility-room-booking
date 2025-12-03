@@ -29,7 +29,19 @@ public class AdminService {
     private final BookingRepository bookingRepository;
     private  final CurrentUserService currentUserService;
 
-    //    create a room
+    /**
+     * Creates a new room in the system using the details provided in the request object.
+     * <p>
+     * The currently authenticated admin user is automatically captured and set as the
+     * creator of the room. After saving the room to the database, the saved entity is
+     * mapped to a {@link RoomResponse} and returned.
+     *
+     * @param request The request object containing necessary room information such as
+     *                name, capacity, location, and resources.
+     * @return A {@link RoomResponse} representing the newly created room with its
+     *         generated ID and stored details.
+     * @throws IllegalArgumentException if the request object is null or contains invalid data.
+     */
     public RoomResponse createRoom(RoomRequest request) {
         User admin = currentUserService.getCurrentUser();
         Room room = Room.builder()
@@ -43,7 +55,21 @@ public class AdminService {
         return RoomMapper.toResponse(saved);
     }
 
-    //    update a room by id
+    /**
+     * Updates the room with the id using the details provided in the request object.
+     * <p>
+     * After saving the updated room details to the database, the saved entity is
+     * mapped to a {@link RoomResponse} and returned.
+     * </p>
+     *
+     * @param request The request object containing updated room information such as
+     *                name, capacity, location, and resources.
+     * @param id The ID of the room being updated
+     * @return A {@link RoomResponse} representing the newly created room with its
+     *         generated ID and stored details.
+     * @throws ResourceNotFoundException if the room with provided ID is not found.
+     * @throws IllegalArgumentException if the request object is null or contains invalid data.
+     */
     public RoomResponse editRoom(RoomRequest request, String id) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
@@ -54,7 +80,14 @@ public class AdminService {
         return RoomMapper.toResponse(roomRepository.save(room));
     }
 
-    //   delete a room by id
+    /**
+     * Deletes the room from the database with the matching id provided
+     *
+     * @param id The ID of the room to be deleted
+     *
+     * @throws ResourceNotFoundException if the room with the provided id is not found
+     * @throws ActionNotAllowedException if there exists an active booking for this room
+     */
     public void deleteRoom(String id) {
         if (!roomRepository.existsById(id)) {
             throw new ResourceNotFoundException("Room not found");
@@ -66,7 +99,13 @@ public class AdminService {
         roomRepository.deleteById(id);
     }
 
-    //    get all bookings
+    /**
+     * Retrieves all non-cancelled bookings for the rooms created by the
+     * currently authenticated admin user.
+     *
+     * @return A list of {@link BookingResponse} objects representing all active
+     *         bookings linked to the admin's rooms.
+     */
     public List<BookingResponse> getBookingsForAdmin() {
         User admin = currentUserService.getCurrentUser();
         List<Room> rooms = roomRepository.findByCreatedBy(admin.getId());
@@ -81,7 +120,11 @@ public class AdminService {
                 .toList();
     }
 
-    //    list rooms of admin
+    /**
+     * Retrieves all the rooms created by the currently authenticated admin user.
+     * @return A list of {@link RoomResponse} objects representing all the rooms
+     * created by the admin
+     */
     public List<RoomResponse> getRooms() {
         User admin = currentUserService.getCurrentUser();
         List<Room> rooms = roomRepository.findByCreatedBy(admin.getId());
@@ -90,7 +133,19 @@ public class AdminService {
                 .toList();
     }
 
-    //    update status of a booking
+    /**
+     * Updates the status of an existing booking after validating that the status transition
+     * is allowed. If the booking is approved, this method also automatically rejects any
+     * pending bookings that conflict with the approved booking's schedule.
+     *
+     * @param bookingId The ID of the booking whose status is being updated.
+     * @param status    The new status to be applied to the booking.
+     * @return A {@link BookingResponse} representing the booking after the status update.
+     *
+     * @throws ResourceNotFoundException if no booking exists with the given ID.
+     * @throws IllegalStateException     if the status transition is invalid (e.g.,
+     *                                   attempting to change {@code APPROVED} to {@code REJECTED} or vice versa).
+     */
     public BookingResponse updateBookingStatus(String bookingId, Booking.Status status) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
@@ -109,7 +164,15 @@ public class AdminService {
         return BookingMapper.toResponse(updatedBooking);
     }
 
-    //    get booking stats
+    /**
+     * Computes and returns booking statistics for all rooms created by the currently
+     * authenticated admin user. The statistics include the count of bookings grouped
+     * by their status (e.g., APPROVED, PENDING, REJECTED, CANCELLED).
+     *
+     * @return A {@link BookingStatsResponse} containing the booking counts categorized
+     *         by status and the total number of bookings for the admin's rooms.
+     */
+
     public BookingStatsResponse getBookingStatsForAdmin() {
         User admin = currentUserService.getCurrentUser();
         List<Room> rooms = roomRepository.findByCreatedBy(admin.getId());
@@ -125,7 +188,16 @@ public class AdminService {
     }
 
 //    HELPER METHODS
-//    auto-reject logic
+
+    /**
+     * Automatically rejects all pending bookings that conflict with the time window
+     * of the provided approved booking. A conflicting booking is any pending booking
+     * for the same room whose time range overlaps with the approved booking.
+     *
+     * @param booking The approved booking for which conflicting pending bookings
+     *                should be identified and rejected.
+     */
+
     private void autoRejectConflicts(Booking booking) {
         List<Booking> pendingConflicts = bookingRepository.findPendingConflicts(
                 booking.getRoomId(),

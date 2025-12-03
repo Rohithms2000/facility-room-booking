@@ -34,7 +34,20 @@ public class UserService {
 
 
     private static final ZoneId zone = ZoneId.of("Asia/Kolkata");
-//    room booking
+    /**
+     * Creates a new booking request for a room on behalf of the currently authenticated user.
+     * <p>
+     * This method ensures that no conflicting bookings already exist for the
+     * specified room and time period. If all validations pass, the booking is created with
+     * a default status of {@code PENDING}.
+     *
+     * @param request the booking details including room ID, time range, and purpose
+     * @return a {@link BookingResponse} representing the newly created booking
+     *
+     * @throws ResourceNotFoundException if the user or room specified in the request is not found
+     * @throws ActionNotAllowedException if the booking conflicts with existing bookings
+     */
+
     public BookingResponse createBooking(BookingRequest request){
         String userId = currentUserService.getCurrentUser().getId();
         User user = userRepository.findById(userId)
@@ -59,7 +72,15 @@ public class UserService {
         return BookingMapper.toResponse(savedBooking);
     }
 
-//    listing rooms (filter)
+    /**
+     * Retrieves a list of rooms filtered by the provided search criteria.
+     *
+     * @param minCapacity the minimum required capacity of the room
+     * @param maxCapacity the maximum allowed capacity of the room
+     * @param location the location of the room to filter by
+     * @param resources a list of required resources that the room must contain
+     * @return a list of {@link RoomResponse} objects matching the given criteria
+     */
     public List<RoomResponse> getRooms(Integer minCapacity, Integer maxCapacity, String location, List<String> resources ){
         List<Room> rooms = roomRepository.searchRooms(minCapacity, maxCapacity, location, resources);
         return rooms.stream()
@@ -67,7 +88,12 @@ public class UserService {
                 .toList();
     }
 
-//    listing all bookings
+    /**
+     * Retrieves all non-cancelled bookings of the currently authenticated user.
+     *
+     * @return A list of {@link BookingResponse} objects representing all active
+     *         bookings of the user.
+     */
     public List<BookingResponse> getAllBookings(){
         String userId = currentUserService.getCurrentUser().getId();
 
@@ -79,7 +105,13 @@ public class UserService {
                 .toList();
     }
 
-//    list bookings for specific room
+    /**
+     * Retrieves all active bookings for the specified room.
+     *
+     * @param roomId the ID of the room whose active bookings are to be retrieved.
+     * @return A list of {@link BookingResponse} objects representing all active
+     *         bookings for the room.
+     */
     public List<BookingResponse> getBookingsForRoom(String roomId){
         List<Booking> bookings = bookingRepository.findActiveBookingsByRoom(roomId);
         return bookings.stream()
@@ -87,7 +119,15 @@ public class UserService {
                 .toList();
     }
 
-//    cancel booking
+    /**
+     * Cancels an existing booking by updating its status to {@code CANCELLED}.
+     *
+     * @param bookingId the ID of the booking to cancel
+     * @return a {@link BookingResponse} representing the cancelled booking
+     *
+     * @throws ResourceNotFoundException if no booking exists with the given ID
+     */
+
     public BookingResponse cancelBooking(String bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                         .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));

@@ -24,7 +24,18 @@ public class AvailabilityRuleService {
     private final RoomRepository roomRepository;
     private final CurrentUserService currentUserService;
 
-//    add a rule
+    /**
+     * Creates a new availability rule for a room after ensuring that the currently
+     * authenticated admin user is authorized to manage the room. The rule is then
+     * saved to the database and returned as a {@link AvailabilityRuleResponse}.
+     *
+     * @param ruleRequest The request object containing the room ID and the details
+     *                    of the rule to be created.
+     * @return An {@link AvailabilityRuleResponse} representing the newly created rule.
+     *
+     * @throws ResourceNotFoundException   if the room specified in the request does not exist.
+     * @throws UnauthorizedAccessException if the current user is not the creator of the room.
+     */
     public AvailabilityRuleResponse addRule(AvailabilityRuleRequest ruleRequest) {
         User admin = currentUserService.getCurrentUser();
 
@@ -42,7 +53,13 @@ public class AvailabilityRuleService {
         return AvailabilityRuleMapper.toResponse(savedRule);
     }
 
-//    get rules for the room
+    /**
+     * Retrieves all availability rules associated with the specified room.
+     *
+     * @param roomId The ID of the room whose availability rules are to be fetched.
+     * @return A list of {@link AvailabilityRuleResponse} objects representing all rules
+     *         defined for the given room.
+     */
     public List<AvailabilityRuleResponse> getRulesForRoom(String roomId) {
 
         List<AvailabilityRule> rules = availabilityRuleRepository.findByRoomId(roomId);
@@ -52,7 +69,15 @@ public class AvailabilityRuleService {
                 .toList();
     }
 
-//    delete a rule
+    /**
+     * Deletes an availability rule by its ID, ensuring that only the room's creator (admin)
+     * is allowed to perform this action.
+     *
+     * @param ruleId the ID of the rule to delete
+     * @throws ResourceNotFoundException if the rule or its associated room is not found
+     * @throws UnauthorizedAccessException if the current user is not the creator of the room
+     */
+
     public void deleteRule(String ruleId) {
         User admin = currentUserService.getCurrentUser();
 
