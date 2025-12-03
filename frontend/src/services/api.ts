@@ -30,12 +30,12 @@ api.interceptors.response.use(
     toast.dismiss();
 
     if (error.code === "ECONNABORTED") {
-      toast.info("⏳ Server is waking up... Please wait a few seconds.");
+      toast.info("Server is waking up... Please wait a few seconds.");
       return Promise.reject(error);
     }
 
     if (error.message === "Network Error") {
-      toast.warning("⚠️ Cannot reach server. It may be starting up...");
+      toast.warning("Could not reach server. It may be starting up...");
       return Promise.reject(error);
     }
 
